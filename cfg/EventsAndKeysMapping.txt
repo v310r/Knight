@@ -1,0 +1,25 @@
+	
+	
+// Events
+	
+	KeyPressed			= 5
+	KeyReleased			= 6
+	MouseButtonPressed  		= 9
+	MouseButtonReleased 		= 10
+	MouseWheelMoved			= 7
+	WindowResized			= 1
+	GainedFocus			= 3
+	LostFocus			= 2
+	MouseEntered			= 12
+	MouseLeft			= 13
+	Closed				= 0
+	TextEntered			= 4
+	Keyboard			= 24
+	Mouse				= 25
+	Joystick			= 26
+
+
+
+// button Codes
+
+	
