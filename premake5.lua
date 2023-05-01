@@ -45,7 +45,8 @@ project "Knight"
         "opengl32.lib",
         "winmm.lib",
         "gdi32.lib",
-        "freetype.lib"
+        "freetype.lib",
+        "shlwapi.lib"
     }
 
     filter "system:windows"

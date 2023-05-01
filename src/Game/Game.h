@@ -24,8 +24,8 @@ public:
 
 private:
 
-	Window m_window;
+	Window m_Window;
 	sf::Clock m_clock;
-	SharedContext m_context;
-	StateManager m_stateManager;
+	SharedContext m_SharedContext;
+	StateManager m_StateManager;
 };

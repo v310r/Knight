@@ -17,52 +17,52 @@ Window::~Window()
 
 void Window::BeginDraw()
 {
-	m_window.clear(sf::Color::Black);
+	m_Window.clear(sf::Color::Black);
 }
 
 void Window::EndDraw()
 {
-	m_window.display();
+	m_Window.display();
 }
 
 void Window::Update()
 {
 	sf::Event event;
-	while (m_window.pollEvent(event))
+	while (m_Window.pollEvent(event))
 	{
 		if (event.type == sf::Event::LostFocus)
 		{
-			m_isFocused = false;
-			m_eventManager.SetFocus(false);
+			m_IsFocused = false;
+			m_EventManager.SetFocus(false);
 		}
 		else if (event.type == sf::Event::GainedFocus)
 		{
-			m_isFocused = true;
-			m_eventManager.SetFocus(true);
+			m_IsFocused = true;
+			m_EventManager.SetFocus(true);
 		}
-		m_eventManager.HandleEvent(event);
+		m_EventManager.HandleEvent(event);
 	}
-	m_eventManager.Update();
+	m_EventManager.Update();
 }
 
 bool Window::IsDone() const
 {
-	return m_isDone;
+	return m_IsDone;
 }
 
 bool Window::IsFullscreen() const
 {
-	return m_isFullscreen;
+	return m_IsFullscreen;
 }
 
 sf::Vector2u Window::GetWindowSize()
 {
-	return m_windowSize;
+	return m_WindowSize;
 }
 
 void Window::Draw(sf::Drawable& drawable)
 {
-	m_window.draw(drawable);
+	m_Window.draw(drawable);
 }
 
 bool Window::IsFocused()
@@ -72,41 +72,51 @@ bool Window::IsFocused()
 
 EventManager* Window::GetEventManager()
 {
-	return &m_eventManager;
+	return &m_EventManager;
 }
 
 void Window::ToggleFullscreen(EventDetails* details)
 {
-	m_isFullscreen = !m_isFullscreen;
+	m_IsFullscreen = !m_IsFullscreen;
 	Destroy();
 	Create();
 }
 
 void Window::Close(EventDetails* details)
 {
-	m_isDone = true;
+	m_IsDone = true;
+}
+
+sf::FloatRect Window::GetViewSpace()
+{
+	const sf::Vector2f viewCenter = m_Window.getView().getCenter();
+	const sf::Vector2f viewSize = m_Window.getView().getSize();
+	const sf::Vector2f viewSizeHalf = viewSize / 2.0f;
+	const sf::FloatRect viewSpace(viewCenter - viewSizeHalf, viewSize);
+
+	return viewSpace;
 }
 
 void Window::Setup(const std::string& title, const sf::Vector2u size)
 {
-	m_windowTitle = title;
-	m_windowSize = size;
-	m_isFullscreen = false;
-	m_isDone = false;
+	m_WindowTitle = title;
+	m_WindowSize = size;
+	m_IsFullscreen = false;
+	m_IsDone = false;
 	Create();
 
-	m_isFocused = true;
-	m_eventManager.AddCallback(StateType::Global, "FullscreenToggle", &Window::ToggleFullscreen, this);
-	m_eventManager.AddCallback(StateType::Global, "WindowClose", &Window::Close, this);
+	m_IsFocused = true;
+	m_EventManager.AddCallback(StateType::Global, "FullscreenToggle", &Window::ToggleFullscreen, this);
+	m_EventManager.AddCallback(StateType::Global, "WindowClose", &Window::Close, this);
 }
 
 void Window::Destroy()
 {
-	m_window.close();
+	m_Window.close();
 }
 
 void Window::Create()
 {
-	const auto style = (m_isFullscreen ? sf::Style::Fullscreen : sf::Style::Default);
-	m_window.create({ m_windowSize.x, m_windowSize.y, 32 }, m_windowTitle, style);
+	const auto style = (m_IsFullscreen ? sf::Style::Fullscreen : sf::Style::Default);
+	m_Window.create({ m_WindowSize.x, m_WindowSize.y, 32 }, m_WindowTitle, style);
 }

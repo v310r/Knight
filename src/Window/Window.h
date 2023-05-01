@@ -33,7 +33,7 @@ public:
 
 	sf::RenderWindow* GetRenderWindow()
 	{
-		return &m_window;
+		return &m_Window;
 	}
 
 	bool IsFocused();
@@ -44,6 +44,8 @@ public:
 
 	void Close(EventDetails* details = nullptr);
 
+	sf::FloatRect GetViewSpace();
+
 private:
 
 	void Setup(const std::string& title, const sf::Vector2u size);
@@ -53,11 +55,11 @@ private:
 	void Create();
 
 
-	sf::RenderWindow m_window;
-	sf::Vector2u m_windowSize;
-	std::string m_windowTitle;
-	bool m_isDone;
-	bool m_isFullscreen;
-	EventManager m_eventManager;
-	bool m_isFocused;
+	sf::RenderWindow m_Window;
+	sf::Vector2u m_WindowSize;
+	std::string m_WindowTitle;
+	bool m_IsDone;
+	bool m_IsFullscreen;
+	EventManager m_EventManager;
+	bool m_IsFocused;
 };

@@ -1,9 +1,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Events/EventManager.h"
-#include "GameLogic/Game.h"
+#include "Game/Game.h"
 #include <memory>
-
+#include "ResourceManagement/ResourceManager.h"
 
 int main()
 {

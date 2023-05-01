@@ -39,19 +39,19 @@ void MainMenuState::OnCreate()
 		m_labels[i].setPosition(buttonPosition);
 	}
 
-	EventManager* const eManager = m_stateManager->GetContext()->GetEventManager();
+	EventManager* const eManager = m_StateManager->GetContext()->GetEventManager();
 	eManager->AddCallback(StateType::MainMenu, "MouseClick", &MainMenuState::MouseClick, this);
 }
 
 void MainMenuState::OnDestroy()
 {
-	EventManager* const eManager = m_stateManager->GetContext()->GetEventManager();
+	EventManager* const eManager = m_StateManager->GetContext()->GetEventManager();
 	eManager->RemoveCallback(StateType::MainMenu, "MouseClick");
 }
 
 void MainMenuState::Activate()
 {
-	if (m_stateManager->HasState(StateType::Game) && m_labels[0].getString() == "PLAY")
+	if (m_StateManager->HasState(StateType::Game) && m_labels[0].getString() == "PLAY")
 	{
 		m_labels[0].setString(sf::String("RESUME"));
 		const sf::FloatRect rect = m_labels[0].getLocalBounds();
@@ -69,7 +69,7 @@ void MainMenuState::Update(const sf::Time& deltaTime)
 
 void MainMenuState::Draw()
 {
-	sf::RenderWindow* window = m_stateManager->GetContext()->GetWindow()->GetRenderWindow();
+	sf::RenderWindow* window = m_StateManager->GetContext()->GetWindow()->GetRenderWindow();
 	window->draw(m_text);
 	for (size_t i = 0; i < 3; ++i)
 	{
@@ -92,7 +92,7 @@ void MainMenuState::MouseClick(EventDetails* details)
 		{
 			if (i == 0)
 			{
-				m_stateManager->SwitchTo(StateType::Game);
+				m_StateManager->SwitchTo(StateType::Game);
 			}
 			else if (i == 1)
 			{
@@ -100,7 +100,7 @@ void MainMenuState::MouseClick(EventDetails* details)
 			}
 			else if (i == 2)
 			{
-				m_stateManager->GetContext()->GetWindow()->Close();
+				m_StateManager->GetContext()->GetWindow()->Close();
 			}
 		}
 	}

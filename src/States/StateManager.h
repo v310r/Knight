@@ -42,15 +42,15 @@ private:
 	template<class T>
 	void RegisterState(const StateType type)
 	{
-		m_stateFactory[type] = [this]() -> BaseState*
+		m_StateFactory[type] = [this]() -> BaseState*
 		{
 			return new T(this);
 		};
 	}
 
-	SharedContext* m_context;
-	StateContainer m_states;
-	TypeContainer m_statesToRemove;
-	StateFactory m_stateFactory;
+	SharedContext* m_SharedContext;
+	StateContainer m_States;
+	TypeContainer m_StatesToRemove;
+	StateFactory m_StateFactory;
 	
 };

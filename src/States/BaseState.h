@@ -10,7 +10,7 @@ class BaseState
 public:
 
 	BaseState(StateManager* stateManager)
-		: m_stateManager(stateManager), m_transparent(false), m_transcendent(false)
+		: m_StateManager(stateManager), m_Transparent(false), m_Transcendent(false)
 	{
 
 	}
@@ -29,36 +29,40 @@ public:
 	virtual void Update(const sf::Time& deltaTime) = 0;
 	virtual void Draw() = 0;
 
-	void SetTransparent(const bool transparent)
+	void SetTransparent(bool value)
 	{
-		m_transparent = transparent;
+		m_Transparent = value;
 	}
 
 	bool IsTransparent() const
 	{
-		return m_transparent;
+		return m_Transparent;
 	}
 
-	void SetTranscendent(const bool transcendent)
+	void SetTranscendent(bool value)
 	{
-		m_transcendent = transcendent;
+		m_Transcendent = value;
 	}
 
 	bool IsTranscendent() const
 	{
-		return m_transcendent;
+		return m_Transcendent;
 	}
 
 	StateManager* GetStateManager()
 	{
-		return m_stateManager;
+		return m_StateManager;
 	}
+
+	sf::View& GetView() { return m_View; }
+	const sf::View& GetView() const { return m_View; }
 
 protected:
 
 	friend class StateManager;
 
-	StateManager* m_stateManager;
-	bool m_transparent;
-	bool m_transcendent;
+	StateManager* m_StateManager;
+	bool m_Transparent;
+	bool m_Transcendent;
+	sf::View m_View;
 };
