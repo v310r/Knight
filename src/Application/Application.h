@@ -5,12 +5,12 @@
 #include "../States/StateManager.h"
 
 
-class Game
+class Application
 {
 public:
-	Game();
+	Application();
 
-	~Game();
+	~Application();
 
 	void HandleInput();
 

@@ -192,7 +192,7 @@ void EventManager::LoadBindings()
 	const std::string delimiter = ":";
 
 	std::ifstream bindings;
-	bindings.open("cfg/bindings.cfg");
+	bindings.open("cfg/Input/bindings.cfg");
 	if (bindings.is_open() == false)
 	{
 		std::cout << "Failed loading cfg file\n";

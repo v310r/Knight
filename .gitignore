@@ -7,6 +7,8 @@
 build/
 
 Notes.txt
+assets/photoshop/*
+assets/raw_textures/*
 
 # VisualStudio
 *.sln

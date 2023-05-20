@@ -1,6 +1,6 @@
 #include "TextureManager.h"
 
-TextureManager::TextureManager() : ResourceManager("cfg/textures.cfg")
+TextureManager::TextureManager() : ResourceManager("cfg/texturesPath.cfg")
 {
 
 }

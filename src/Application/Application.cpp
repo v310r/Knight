@@ -1,41 +1,41 @@
-#include "Game.h"
+#include "Application.h"
 
-Game::Game() : m_Window("Knight", sf::Vector2u(800, 600)), m_StateManager(&m_SharedContext)
+Application::Application() : m_Window("Knight", sf::Vector2u(800, 600)), m_StateManager(&m_SharedContext)
 {
 	m_SharedContext.SetWindow(&m_Window);
 	m_SharedContext.SetEventManager(m_Window.GetEventManager());
 	m_StateManager.SwitchTo(StateType::Intro);
 }
 
-Game::~Game()
+Application::~Application()
 {
 }
 
-void Game::HandleInput()
+void Application::HandleInput()
 {
 
 }
 
-void Game::Update()
+void Application::Update()
 {
 	m_Window.Update();
 	const sf::Time d = m_clock.getElapsedTime();
 	m_StateManager.Update(d);
 }
 
-void Game::Render()
+void Application::Render()
 {
 	m_Window.BeginDraw();
 	m_StateManager.Draw();
 	m_Window.EndDraw();
 }
 
-Window& Game::GetWindow()
+Window& Application::GetWindow()
 {
 	return m_Window;
 }
 
-void Game::PostUpdate()
+void Application::PostUpdate()
 {
 	m_StateManager.ProcessRequests();
 	m_clock.restart();
