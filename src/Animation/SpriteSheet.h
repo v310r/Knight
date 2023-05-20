@@ -48,5 +48,8 @@ private:
 	Animations m_Animations;
 	AnimBase* m_CurrentAnimation = nullptr;
 
+	// hardcoded value, which of course would be better to fix, making user to choose default anim through UI
+	std::string m_DefaultAnimationName = "Idle";
+
 	TextureManager* m_TextureManager;
 };

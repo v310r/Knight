@@ -196,7 +196,9 @@ private:
 	Events m_events;
 	std::string m_name;
 	EventDetails m_details;
-	int m_count; // Count of events that are "happening"
+
+	// we add to count when type of incoming event is required for the binding. m_count - count of events that are happening in runtime (in tick)
+	int m_count; 
 };
 
 using Bindings = std::unordered_map<std::string, Binding*>;

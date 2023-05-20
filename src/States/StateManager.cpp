@@ -123,14 +123,15 @@ void StateManager::SwitchTo(const StateType type)
 	}
 
 	// in case state wasn't found
-	BaseState* const lastState = m_States.back().second;
 	if (m_States.empty() == false)
 	{
-		lastState->Deactivate();
+		m_States.back().second->Deactivate();
 	}
+
 	CreateState(type);
-	lastState->Activate();
-	m_SharedContext->GetWindow()->GetRenderWindow()->setView(lastState->GetView());
+	BaseState* baseState = m_States.back().second;
+	baseState->Activate();
+	m_SharedContext->GetWindow()->GetRenderWindow()->setView(baseState->GetView());
 }
 
 void StateManager::Remove(const StateType type)
@@ -142,7 +143,9 @@ void StateManager::CreateState(const StateType type)
 {
 	auto newState = m_StateFactory.find(type);
 	if (newState == m_StateFactory.end())
+	{
 		return;
+	}
 
 	BaseState* state = newState->second();
 	state->m_View = m_SharedContext->GetWindow()->GetRenderWindow()->getDefaultView();

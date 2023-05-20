@@ -17,10 +17,10 @@ void SpriteSheet::CropSprite(const sf::IntRect& rect)
 	m_Sprite.setTextureRect(rect);
 }
 
-bool SpriteSheet::LoadSheet(const std::string& path)
+bool SpriteSheet::LoadSheet(const std::string& configPath)
 {
 	std::ifstream sheet;
-	sheet.open(std::filesystem::current_path() / path);
+	sheet.open(std::filesystem::current_path() / configPath);
 	if (sheet.is_open())
 	{
 		ReleaseSheet();
@@ -39,7 +39,7 @@ bool SpriteSheet::LoadSheet(const std::string& path)
 			{
 				if (m_TextureName != "")
 				{
-					std::cerr << "Duplicate texture entries in: " << path << std::endl;
+					std::cerr << "Duplicate texture entries in: " << configPath << std::endl;
 					continue;
 				}
 
@@ -74,8 +74,9 @@ bool SpriteSheet::LoadSheet(const std::string& path)
 				keystream >> name;
 				if (m_Animations.find(name) != m_Animations.end())
 				{
-					std::cerr << "Duplicate animation (" << name << ") in: " << path << std::endl;
+					std::cerr << "Duplicate animation (" << name << ") in: " << configPath << std::endl;
 				}
+
 				AnimBase* anim = nullptr;
 				if (m_AnimType == "Directional")
 				{
@@ -92,19 +93,29 @@ bool SpriteSheet::LoadSheet(const std::string& path)
 				anim->SetName(name);
 				anim->Reset();
 				m_Animations.emplace(name, anim);
-
-				if (!m_CurrentAnimation)
-				{
-					m_CurrentAnimation = anim;
-					m_CurrentAnimation->Play();
-				}
 			}
 		}
 
-		sheet.close();
+		if (auto iter = m_Animations.find(m_DefaultAnimationName); iter  != m_Animations.end())
+		{
+			m_CurrentAnimation = iter->second;
+		}
+		else if (auto iter = m_Animations.begin(); iter != m_Animations.end())
+		{
+			m_CurrentAnimation = iter->second;
+		}
+		else
+		{
+			std::cerr << "No Animation settings present in config file: " << configPath << std::endl;
+			return false;
+		}
+
+		m_CurrentAnimation->Play();
+
 		return true;
 	}
-	std::cerr << "Failed to load SpriteSheet: " << path << std::endl;
+
+	std::cerr << "Failed to load SpriteSheet: " << configPath << std::endl;
 	return false;
 }
 

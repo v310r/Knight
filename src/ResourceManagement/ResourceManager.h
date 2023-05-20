@@ -15,7 +15,7 @@ public:
 		LoadPaths(fileContainingPaths);
 	}
 
-	virtual ~ResourceManager() { PurgeResources(); }
+	~ResourceManager() { PurgeResources(); }
 
 	bool RequireResource(const std::string& id)
 	{
@@ -38,7 +38,8 @@ public:
 			return false;
 		}
 
-		m_Resources.emplace(id, std::make_pair(resource, id));
+		// first time the resource is needed
+		m_Resources.emplace(id, std::make_pair(resource, 1)); 
 		return true;
 	}
 
@@ -50,6 +51,7 @@ public:
 			return false;
 		}
 
+		// if the resource is no longer used by anything, then unload it
 		--res->second;
 		if (res->second == 0)
 		{

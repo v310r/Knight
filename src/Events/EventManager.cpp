@@ -116,7 +116,10 @@ void EventManager::HandleEvent(const sf::Event& incomingEvent)
 
 void EventManager::Update()
 {
-	if (m_hasFocus == false) return;
+	if (m_hasFocus == false)
+	{
+		return;
+	}
 
 	for (auto& bindingObject : m_bindings)
 	{
