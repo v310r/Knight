@@ -1,5 +1,6 @@
 #include "MainMenuState.h"
 #include "StateManager.h"
+#include "../Window/Window.h"
 
 
 void MainMenuState::OnCreate()

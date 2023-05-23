@@ -1,7 +1,10 @@
 #pragma once
 
-#include "../Window/Window.h"
-#include "../Events/EventManager.h"
+
+class Window;
+class EventManager;
+class TextureManager;
+class Map;
 
 class SharedContext
 {
@@ -29,8 +32,30 @@ public:
 		m_EventManager = eventManager;
 	}
 
+	TextureManager* GetTextureManager() const
+	{
+		return m_TextureManager;
+	}
+
+	void SetEventManager(TextureManager* textureManager)
+	{
+		m_TextureManager = textureManager;
+	}
+
+	Map* GetMap() const
+	{
+		return m_Map;
+	}
+
+	void SetMap(Map* map)
+	{
+		m_Map = map;
+	}
+
 private:
 
-	Window* m_Window;
-	EventManager* m_EventManager;
+	Window* m_Window = nullptr;
+	EventManager* m_EventManager = nullptr;
+	TextureManager* m_TextureManager = nullptr;
+	Map* m_Map = nullptr;
 };

@@ -5,6 +5,7 @@
 #include <memory>
 #include "ResourceManagement/ResourceManager.h"
 
+
 int main()
 {
     auto game = std::make_unique<Application>();

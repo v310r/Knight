@@ -1,5 +1,6 @@
 #include "GameState.h"
 #include "StateManager.h"
+#include "../Window/Window.h"
 
 
 void GameState::OnCreate()

@@ -3,6 +3,8 @@
 #include "MainMenuState.h"
 #include "GameState.h"
 #include "PausedState.h"
+#include "../Window/Window.h"
+
 
 StateManager::StateManager(SharedContext* shared) : m_SharedContext(shared)
 {
