@@ -27,31 +27,6 @@ Tile* Map::GetTile(unsigned int x, unsigned int y)
 	return (iter != m_Tiles.end()) ? iter->second : nullptr;
 }
 
-TileInfo* Map::GetDefaultTile()
-{
-	return nullptr;
-}
-
-float Map::GetGravity() const
-{
-	return 0.0f;
-}
-
-unsigned int Map::GetTileSize() const
-{
-	return 0u;
-}
-
-const sf::Vector2f& Map::GetMapSize() const
-{
-	return {};
-}
-
-const sf::Vector2f& Map::GetPlayerStart() const
-{
-	return {};
-}
-
 void Map::LoadMap(const std::string& path)
 {
 	std::ifstream file;
@@ -89,7 +64,7 @@ void Map::LoadMap(const std::string& path)
 				continue;
 			}
 
-			sf::Vector2i tileCoords;
+			sf::Vector2u tileCoords;
 			keystream >> tileCoords.x >> tileCoords.y;
 			if (tileCoords.x > m_MaxSize.x || tileCoords.y > m_MaxSize.y)
 			{

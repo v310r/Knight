@@ -21,15 +21,17 @@ public:
 
 	Tile* GetTile(unsigned int x, unsigned int y);
 
-	TileInfo* GetDefaultTile();
+	TileInfo* GetDefaultTile() { return &m_DefaultTile; }
 
-	float GetGravity() const;
+	float GetGravity() const { return m_Gravity; }
+	void SetGravity(float value) { m_Gravity = value; }
 
-	unsigned int GetTileSize() const;
+	unsigned int GetTileSize() const { return TileSheet::TileSize; }
 
-	const sf::Vector2f& GetMapSize() const;
+	const sf::Vector2u& GetMapSize() const { return m_MaxSize; }
 
-	const sf::Vector2f& GetPlayerStart() const;
+	const sf::Vector2f& GetPlayerStart() const { return m_PlayerStart; }
+	void SetPlayerStart(sf::Vector2f position) { m_PlayerStart = position; }
 
 	void LoadMap(const std::string& path);
 
