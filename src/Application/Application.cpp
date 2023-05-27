@@ -1,5 +1,6 @@
 #include "Application.h"
 
+
 Application::Application() : m_Window("Knight", sf::Vector2u(800, 600)), m_StateManager(&m_SharedContext)
 {
 	m_SharedContext.SetWindow(&m_Window);

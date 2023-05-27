@@ -5,6 +5,7 @@ class Window;
 class EventManager;
 class TextureManager;
 class Map;
+class EntityManager;
 
 class SharedContext
 {
@@ -52,10 +53,21 @@ public:
 		m_Map = map;
 	}
 
+	EntityManager* GetEntityManager() const
+	{
+		return m_EntityManager;
+	}
+
+	void SetEntityManager(EntityManager* entityManager)
+	{
+		m_EntityManager = entityManager;
+	}
+
 private:
 
 	Window* m_Window = nullptr;
 	EventManager* m_EventManager = nullptr;
 	TextureManager* m_TextureManager = nullptr;
 	Map* m_Map = nullptr;
+	EntityManager* m_EntityManager = nullptr;
 };

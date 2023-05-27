@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Window/Window.h"
+#include "Window/Window.h"
 #include <iostream>
-#include "../States/StateManager.h"
+#include "States/StateManager.h"
 
 
 class Application

@@ -10,16 +10,6 @@ AnimBase::~AnimBase()
 {
 }
 
-void AnimBase::Play()
-{	
-	m_bPlaying = true;
-}
-
-void AnimBase::Pause()
-{
-	m_bPlaying = false;
-}
-
 void AnimBase::Stop()
 {
 	m_bPlaying = false;
@@ -61,11 +51,6 @@ bool AnimBase::IsInAction()
 	return (m_CurrentFrame >= m_ActionStartFrame && m_CurrentFrame <= m_ActionEndFrame);
 }
 
-void AnimBase::SetSpriteSheet(SpriteSheet* const sheet)
-{
-	m_SpriteSheet = sheet;
-}
-
 void AnimBase::SetCurrentFrame(Frame frame)
 {
 	if ((frame >= m_StartFrame && frame <= m_EndFrame) ||
@@ -73,14 +58,4 @@ void AnimBase::SetCurrentFrame(Frame frame)
 	{
 		m_CurrentFrame = frame;
 	}
-}
-
-void AnimBase::SetLooping(bool value)
-{
-	m_bLoop = value;
-}
-
-void AnimBase::SetName(const std::string& name)
-{
-	m_Name = name;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ResourceManagement/TextureManager.h"
+#include "ResourceManagement/TextureManager.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SpriteDirection.h"
@@ -29,17 +29,17 @@ public:
 
 	void SetSpritePosition(const sf::Vector2f pos);
 
-	void SetDirection(Direction dir);
-	Direction GetDirection();
+	void SetDirection(SpriteDirection dir);
+	SpriteDirection GetDirection();
 
-	//AnimBase* GetCurrentAnim();
+	AnimBase* GetCurrentAnimation() const { return m_CurrentAnimation; }
 	bool SetAnimation(const std::string& name, bool bPlay = false, bool bLoop = false);
 
 private:
 	std::string m_TextureName;
 	sf::Sprite m_Sprite;
 	
-	Direction m_SpriteDirection = Direction::Right;
+	SpriteDirection m_SpriteDirection = SpriteDirection::Right;
 	sf::Vector2i m_SpriteSize;
 	sf::Vector2f m_SpriteScale = {1.0f , 1.0f};
 

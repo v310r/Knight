@@ -32,7 +32,8 @@ project "Knight"
 
     includedirs
     {
-        "extern/SFML-2.5.1/include"
+        "extern/SFML-2.5.1/include",
+        "%{prj.location}/src"
     }
 
     libdirs

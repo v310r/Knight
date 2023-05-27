@@ -1,6 +1,7 @@
 #include "IntroState.h"
+
 #include "StateManager.h"
-#include "../Window/Window.h"
+#include "Window/Window.h"
 
 
 void IntroState::OnCreate()

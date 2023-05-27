@@ -1,8 +1,9 @@
 #include "EntityBase.h"
 
 #include <SFML/Graphics.hpp>
-#include "../World/Map.h"
-#include "../Utilities/CollisionHelper.h"
+#include "World/Map.h"
+#include "Utilities/CollisionHelper.h"
+#include "EntityManager.h"
 #include <algorithm>
 
 
@@ -18,7 +19,7 @@ EntityBase::~EntityBase()
 
 void EntityBase::Update(float deltaTime)
 {
-	Map* map = nullptr; //m_EntityManager->GetContext()->GetMap();
+	Map* map = m_EntityManager->GetContext()->GetMap();
 	const float gravity = map->GetGravity();
 	Accelerate(0.0f, gravity);
 	AddVelocity(m_Acceleration * deltaTime);
@@ -66,7 +67,7 @@ void EntityBase::Move(sf::Vector2f position)
 	m_PositionOld = m_Position;
 	m_Position += position;
 
-	const sf::Vector2u mapSize = {};// m_EntityManager->GetContext()->GetMap()->GetMapSize();
+	const sf::Vector2u mapSize = m_EntityManager->GetContext()->GetMap()->GetMapSize();
 	const sf::Vector2u UnitMapSize = (mapSize + sf::Vector2u(1U, 1U)) * static_cast<unsigned int>(TileSheet::TileSize);
 
 
@@ -243,7 +244,7 @@ void EntityBase::UpdateAABB()
 
 void EntityBase::DetectCollisions()
 {
-	Map* map = nullptr; //m_EntityManager->GetContext()->GetMap();
+	Map* map = m_EntityManager->GetContext()->GetMap();
 	const float tileSize = static_cast<float>(map->GetTileSize());
 	
 	const int startX = static_cast<int>(std::floor(m_AABB.left / tileSize));
@@ -297,7 +298,7 @@ void EntityBase::ResolveCollisions()
 		return c1.Area > c2.Area;
 	});
 
-	Map* map = nullptr; //m_EntityManager->GetContext()->GetMap();
+	Map* map = m_EntityManager->GetContext()->GetMap();
 	unsigned int tileSize = map->GetTileSize();
 	for (auto& manifold : m_Collisions)
 	{

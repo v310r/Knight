@@ -4,17 +4,19 @@
 
 class SpriteSheet;
 
-using Frame = unsigned int;
+using Frame = int;
 
 
 class AnimBase
 {
+	friend class SpriteSheet;
+
 public:
 	AnimBase();
 	virtual ~AnimBase() = 0;
 
-	void Play();
-	void Pause();
+	void Play() { m_bPlaying = true; }
+	void Pause() { m_bPlaying = false; }
 	void Stop();
 	void Reset();
 
@@ -28,10 +30,17 @@ public:
 
 	bool IsInAction();
 
-	void SetSpriteSheet(SpriteSheet* const sheet);
+	void SetSpriteSheet(SpriteSheet* const sheet) { m_SpriteSheet = sheet; }
+
 	void SetCurrentFrame(Frame frame);
-	void SetLooping(bool value);
-	void SetName(const std::string& name);
+
+	void SetLooping(bool value) { m_bLoop = value; }
+	bool IsLooping() const { return m_bLoop; }
+
+	bool IsPlaying() const { return m_bPlaying; }
+
+	void SetName(const std::string& name) { m_Name = name; }
+	const std::string& GetName() const { return m_Name; }
 
 protected:
 	virtual void FrameStep() = 0;
@@ -59,8 +68,5 @@ protected:
 
 	std::string m_Name;
 	SpriteSheet* m_SpriteSheet;
-
-private:
-	friend class SpriteSheet;
 };
 

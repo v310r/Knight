@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Utilities/EntityHelper.h"
-#include "../Utilities/CollisionHelper.h"
+#include "Utilities/EntityHelper.h"
+#include "Utilities/CollisionHelper.h"
 #include <SFML/System/Vector2.hpp>
 #include <string>
 
@@ -51,9 +51,17 @@ public:
 	void SetSize(sf::Vector2f size);
 
 	void SetState(EntityState state);
-	
+	EntityState GetState() const { return m_State; }
+
+
+	const std::string& GetName() const { return m_Name; }
+
+	EntityType GetType() const { return m_Type; }
+
+	unsigned int GetId() const { return m_ID; }
+
 protected:
-	virtual void OnEntityCollision(EntityBase* collider, bool bAttack) = 0;
+	virtual void OnEntityCollision(EntityBase* collidedEntity, bool bAttack) = 0;
 
 	void UpdateAABB();
 

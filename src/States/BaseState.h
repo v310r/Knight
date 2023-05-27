@@ -1,7 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "../Events/EventManager.h"
+#include "Events/EventManager.h"
+
 
 class StateManager;
 

@@ -6,7 +6,7 @@
 #include <functional>
 #include "BaseState.h"
 #include "StateType.h"
-#include "../SharedContext/SharedContext.h"
+#include "SharedContext/SharedContext.h"
 
 
 using StateContainer = std::vector<std::pair<StateType, BaseState*>>;

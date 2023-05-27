@@ -1,5 +1,4 @@
 #include <iostream>
-#include <SFML/Graphics.hpp>
 #include "Events/EventManager.h"
 #include "Application/Application.h"
 #include <memory>

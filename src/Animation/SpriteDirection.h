@@ -2,7 +2,7 @@
 
 
 
-enum class Direction
+enum class SpriteDirection
 {
 	Right = 0,
 	Left = 1

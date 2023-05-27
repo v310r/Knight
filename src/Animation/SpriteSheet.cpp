@@ -156,7 +156,7 @@ void SpriteSheet::SetSpritePosition(const sf::Vector2f pos)
 	m_Sprite.setPosition(pos);
 }
 
-void SpriteSheet::SetDirection(Direction dir)
+void SpriteSheet::SetDirection(SpriteDirection dir)
 {
 	if (dir == m_SpriteDirection)
 	{
@@ -166,7 +166,7 @@ void SpriteSheet::SetDirection(Direction dir)
 	m_CurrentAnimation->CropSprite();
 }
 
-Direction SpriteSheet::GetDirection()
+SpriteDirection SpriteSheet::GetDirection()
 {
 	return m_SpriteDirection;
 }

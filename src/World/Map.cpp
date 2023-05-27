@@ -1,8 +1,9 @@
 #include "Map.h"
 
-#include "../Window/Window.h"
-#include "../ResourceManagement/TextureManager.h"
-#include "../States/StateManager.h"
+#include "Window/Window.h"
+#include "ResourceManagement/TextureManager.h"
+#include "States/StateManager.h"
+#include "Entities/EntityManager.h"
 #include <cmath>
 
 
@@ -255,7 +256,7 @@ void Map::PurgeEverything()
 	}
 
 	m_Tiles.clear();
-	//m_Context->GetEntityManager()->PurgeEverything();
+	m_Context->GetEntityManager()->PurgeEntities();
 
 	if (m_BackgroundTextureName.empty())
 	{

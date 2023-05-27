@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../Utilities/TileHelper.h"
+#include "Utilities/TileHelper.h"
 #include "Tile.h"
 #include "TileInfo.h"
-#include "../SharedContext/SharedContext.h"
-#include "../States/BaseState.h"
+#include "SharedContext/SharedContext.h"
+#include "States/BaseState.h"
 #include <unordered_map>
 
 

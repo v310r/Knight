@@ -1,8 +1,9 @@
 #include "TileInfo.h"
-#include "../SharedContext/SharedContext.h"
-#include "../ResourceManagement/TextureManager.h"
+
+#include "SharedContext/SharedContext.h"
+#include "ResourceManagement/TextureManager.h"
 #include <SFML/Graphics/Rect.hpp>
-#include "../Utilities/TileHelper.h"
+#include "Utilities/TileHelper.h"
 
 
 TileInfo::TileInfo(SharedContext* context, const std::string& textureName, TileID id) : Context(context)

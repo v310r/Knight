@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Utilities/TileHelper.h"
+#include "Utilities/TileHelper.h"
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <string>

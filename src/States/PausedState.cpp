@@ -1,6 +1,7 @@
 #include "PausedState.h"
+
 #include "StateManager.h"
-#include "../Window/Window.h"
+#include "Window/Window.h"
 
 
 void PausedState::OnCreate()
