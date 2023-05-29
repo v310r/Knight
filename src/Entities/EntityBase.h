@@ -38,14 +38,20 @@ public:
 	void SetAcceleration(float x, float y);
 	void SetAcceleration(sf::Vector2f value);
 
+	sf::Vector2f GetAcceleration() const { return m_Acceleration; }
+
 	void ApplyFriction(float x, float y);
 	void ApplyFriction(sf::Vector2f value);
 
 	void SetPosition(float x, float y);
 	void SetPosition(sf::Vector2f position);
 
+	sf::Vector2f GetPosition() const { return m_Position; }
+
 	void SetVelocity(float x, float y);
 	void SetVelocity(sf::Vector2f value);
+
+	sf::Vector2f GetVelocity() const { return m_Velocity; }
 
 	void SetSize(float x, float y);
 	void SetSize(sf::Vector2f size);
@@ -61,6 +67,9 @@ public:
 	unsigned int GetId() const { return m_ID; }
 
 protected:
+	/*
+		bAttack - flag to determine whether collision occurred using an attack collision box
+	*/
 	virtual void OnEntityCollision(EntityBase* collidedEntity, bool bAttack) = 0;
 
 	void UpdateAABB();

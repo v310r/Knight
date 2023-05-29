@@ -26,7 +26,7 @@ public:
 	
 	virtual void Draw(sf::RenderWindow* window) override;
 
-	virtual void OnEntityCollision(EntityBase* collidedEntity, bool attack) = 0;
+	virtual void OnEntityCollision(EntityBase* collidedEntity, bool bAttack) = 0;
 
 	void Move(const SpriteDirection& direction);
 

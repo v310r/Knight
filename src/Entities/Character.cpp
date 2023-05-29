@@ -33,8 +33,7 @@ void Character::Update(float deltaTime)
 		UpdateAttackAABB();
 	}
 
-	const EntityState state = GetState();
-	if (state != EntityState::Dying && state != EntityState::Attacking && state != EntityState::Hurt)
+	if (m_State != EntityState::Dying && m_State != EntityState::Attacking && m_State != EntityState::Hurt)
 	{
 		if (std::abs(m_Velocity.y) >= ANIMATION_THRESHOLD_BY_VELOCITY_Y)
 		{
@@ -49,14 +48,14 @@ void Character::Update(float deltaTime)
 			SetState(EntityState::Idle);
 		}
 	}
-	else if (state == EntityState::Attacking || state == EntityState::Hurt)
+	else if (m_State == EntityState::Attacking || m_State == EntityState::Hurt)
 	{
 		if (!m_SpriteSheet->GetCurrentAnimation()->IsPlaying())
 		{
 			SetState(EntityState::Idle);
 		}
 	}
-	else if (state == EntityState::Dying)
+	else if (m_State == EntityState::Dying)
 	{
 		if (!m_SpriteSheet->GetCurrentAnimation()->IsPlaying())
 		{
@@ -76,8 +75,7 @@ void Character::Draw(sf::RenderWindow* window)
 
 void Character::Move(const SpriteDirection& direction)
 {
-	const EntityState state = GetState();
-	if (state == EntityState::Dying)
+	if (m_State == EntityState::Dying)
 	{
 		return;
 	}
@@ -93,7 +91,7 @@ void Character::Move(const SpriteDirection& direction)
 		Accelerate(m_Speed.x, 0.0f);
 	}
 
-	if (state == EntityState::Idle)
+	if (m_State == EntityState::Idle)
 	{
 		SetState(EntityState::Walking);
 	}
@@ -101,8 +99,7 @@ void Character::Move(const SpriteDirection& direction)
 
 void Character::Jump()
 {
-	const EntityState state = GetState();
-	if (state == EntityState::Dying || state == EntityState::Jumping || state == EntityState::Hurt)
+	if (m_State == EntityState::Dying || m_State == EntityState::Jumping || m_State == EntityState::Hurt)
 	{
 		return;
 	}
@@ -113,8 +110,7 @@ void Character::Jump()
 
 void Character::Attack()
 {
-	const EntityState state = GetState();
-	if (state == EntityState::Dying || state == EntityState::Jumping || state == EntityState::Hurt || state == EntityState::Attacking)
+	if (m_State == EntityState::Dying || m_State == EntityState::Jumping || m_State == EntityState::Hurt || m_State == EntityState::Attacking)
 	{
 		return;
 	}
@@ -124,8 +120,7 @@ void Character::Attack()
 
 void Character::GetHurt(int damage)
 {
-	const EntityState state = GetState();
-	if (state == EntityState::Dying || state == EntityState::Hurt)
+	if (m_State == EntityState::Dying || m_State == EntityState::Hurt)
 	{
 		return;
 	}
@@ -215,28 +210,27 @@ void Character::UpdateAttackAABB()
 
 void Character::Animate()
 {
-	const EntityState state = GetState();
-	if (state == EntityState::Walking && m_SpriteSheet->GetCurrentAnimation()->GetName() != "Walk")
+	if (m_State == EntityState::Walking && m_SpriteSheet->GetCurrentAnimation()->GetName() != "Walk")
 	{
 		m_SpriteSheet->SetAnimation("Walk", true, true);
 	}
-	else if (state == EntityState::Jumping && m_SpriteSheet->GetCurrentAnimation()->GetName() != "Jump")
+	else if (m_State == EntityState::Jumping && m_SpriteSheet->GetCurrentAnimation()->GetName() != "Jump")
 	{
 		m_SpriteSheet->SetAnimation("Jump", true, false);
 	}
-	else if (state == EntityState::Attacking && m_SpriteSheet->GetCurrentAnimation()->GetName() != "Attack")
+	else if (m_State == EntityState::Attacking && m_SpriteSheet->GetCurrentAnimation()->GetName() != "Attack")
 	{
 		m_SpriteSheet->SetAnimation("Attack", true, false);
 	}
-	else if (state == EntityState::Hurt && m_SpriteSheet->GetCurrentAnimation()->GetName() != "Hurt")
+	else if (m_State == EntityState::Hurt && m_SpriteSheet->GetCurrentAnimation()->GetName() != "Hurt")
 	{
 		m_SpriteSheet->SetAnimation("Hurt", true, false);
 	}
-	else if (state == EntityState::Dying && m_SpriteSheet->GetCurrentAnimation()->GetName() != "Death")
+	else if (m_State == EntityState::Dying && m_SpriteSheet->GetCurrentAnimation()->GetName() != "Death")
 	{
 		m_SpriteSheet->SetAnimation("Death", true, false);
 	}
-	else if (state == EntityState::Idle && m_SpriteSheet->GetCurrentAnimation()->GetName() != "Idle")
+	else if (m_State == EntityState::Idle && m_SpriteSheet->GetCurrentAnimation()->GetName() != "Idle")
 	{
 		m_SpriteSheet->SetAnimation("Idle", true, true);
 	}
