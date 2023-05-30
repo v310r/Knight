@@ -1,8 +1,6 @@
 #pragma once
 
 #include "EntityBase.h"
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <memory>
 
 
@@ -37,6 +35,8 @@ public:
 	void GetHurt(int damage);
 
 	void Load(const std::string& path);
+
+	const sf::FloatRect& GetAttackAABB() const { return m_AttackAABB; }
 
 protected:
 	void UpdateAttackAABB();

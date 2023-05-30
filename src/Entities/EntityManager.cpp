@@ -4,19 +4,20 @@
 #include <fstream>
 #include <filesystem>
 #include <sstream>
-#include "EntityBase.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include "SharedContext/SharedContext.h"
 #include "Window/Window.h"
+#include "Player.h"
+#include "Enemy.h"
 
 
 EntityManager::EntityManager(SharedContext* context, unsigned int maxEntities)
 	: m_Context(context), m_MaxEntities(maxEntities)
 {
 	LoadEnemyTypes("cfg/Entities/EnemyList.list");
-	//RegisterEntity<Player>(EntityType::Player);
-	//RegisterEntity<Enemy>(EntityType::Enemy);
+	RegisterEntity<Player>(EntityType::Player);
+	RegisterEntity<Enemy>(EntityType::Enemy);
 }
 
 EntityManager::~EntityManager()
@@ -45,8 +46,8 @@ int EntityManager::Add(EntityType type, const std::string& name)
 		auto iter = m_EnemyTypes.find(name);
 		if (iter != m_EnemyTypes.end())
 		{
-			//Enemy* enemy = static_cast<Enemy*>(entity);
-			//enemy->Load(iter->second); // pass file path
+			Enemy* enemy = static_cast<Enemy*>(entity);
+			enemy->Load(iter->second); // pass file path
 		}
 	}
 
@@ -181,25 +182,25 @@ void EntityManager::EntityCollisionProcessing()
 				iterB->second->OnEntityCollision(iterA->second, false);
 			}
 
-			//const EntityType typeA = iterA->second->GetType();
-			//const EntityType typeB = iterB->second->GetType();
-			//if (typeA == EntityType::Player || typeA == EntityType::Enemy)
-			//{
-			//	Character* characterA = static_cast<Character*>(iterA->second);
-			//	if (characterA->GetAttackAABB().intersects(iterB->second->m_AABB))
-			//	{
-			//		characterA->OnEntityCollision(iterB->second, true);
-			//	}
-			//}
+			const EntityType typeA = iterA->second->GetType();
+			const EntityType typeB = iterB->second->GetType();
+			if (typeA == EntityType::Player || typeA == EntityType::Enemy)
+			{
+				Character* characterA = static_cast<Character*>(iterA->second);
+				if (characterA->GetAttackAABB().intersects(iterB->second->m_AABB))
+				{
+					characterA->OnEntityCollision(iterB->second, true);
+				}
+			}
 
-			//if (typeB == EntityType::Player || typeB == EntityType::Enemy)
-			//{
-			//	Character* characterB = static_cast<Character*>(iterB->second);
-			//	if (characterB->GetAttackAABB().intersects(iterA->second->m_AABB))
-			//	{
-			//		characterB->OnEntityCollision(iterA->second, true);
-			//	}
-			//}
+			if (typeB == EntityType::Player || typeB == EntityType::Enemy)
+			{
+				Character* characterB = static_cast<Character*>(iterB->second);
+				if (characterB->GetAttackAABB().intersects(iterA->second->m_AABB))
+				{
+					characterB->OnEntityCollision(iterA->second, true);
+				}
+			}
 		}
 	}
 }

@@ -4,6 +4,7 @@
 #include "ResourceManagement/TextureManager.h"
 #include "States/StateManager.h"
 #include "Entities/EntityManager.h"
+#include "Entities/EntityBase.h"
 #include <cmath>
 
 
@@ -11,6 +12,7 @@ Map::Map(SharedContext* context, BaseState* currentState)
 	: m_Context(context), m_DefaultTile(context), m_CurrentState(currentState)
 {
 	m_Context->SetMap(this);
+	m_EntityManager = m_Context->GetEntityManager();
 	LoadTiles("cfg/Tiles.cfg");
 }
 
@@ -131,6 +133,52 @@ void Map::LoadMap(const std::string& path)
 		{
 			keystream >> m_NextMap;
 		}
+		else if (type == "PLAYER")
+		{
+			int playerId;
+			keystream >> playerId;
+			if (playerId < 0)
+			{
+				std::cerr << "Bad player id(" << path << "): " << playerId << std::endl;
+				continue;
+			}
+
+			playerId = m_EntityManager->Add(EntityType::Player, "Player");
+			if (playerId < 0)
+			{
+				std::cerr << "Bad player id (EntityManager): " << playerId << std::endl;
+				continue;
+			}
+
+			float playerX = 0.0f, playerY = 0.0f;
+			keystream >> playerX >> playerY;
+			m_EntityManager->Find(playerId)->SetPosition(playerX, playerY);
+			m_PlayerStart = sf::Vector2f(playerX, playerY);
+		}
+		else if (type == "ENEMY")
+		{
+			int enemyId;
+			keystream >> enemyId;
+			if (enemyId < 0)
+			{
+				std::cerr << "Bad enemy id(" << path << "): " << enemyId << std::endl;
+				continue;
+			}
+
+			std::string enemyName;
+			keystream >> enemyName;
+
+			enemyId = m_EntityManager->Add(EntityType::Enemy, enemyName);
+			if (enemyId < 0)
+			{
+				std::cerr << "Bad enemy id (EntityManager): " << enemyId << std::endl;
+				continue;
+			}
+
+			float enemyX = 0.0f, enemyY = 0.0f;
+			keystream >> enemyX >> enemyY;
+			m_EntityManager->Find(enemyId)->SetPosition(enemyX, enemyY);
+		}
 	}
 }
 
@@ -148,7 +196,7 @@ void Map::Update(float deltaTime)
 
 		if (!m_NextMap.empty())
 		{
-			LoadMap("cfg/Maps/" + m_NextMap);
+			LoadMap(m_NextMap);
 		}
 		else
 		{
@@ -256,7 +304,7 @@ void Map::PurgeEverything()
 	}
 
 	m_Tiles.clear();
-	m_Context->GetEntityManager()->PurgeEntities();
+	m_EntityManager->PurgeEntities();
 
 	if (m_BackgroundTextureName.empty())
 	{

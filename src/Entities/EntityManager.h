@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <unordered_map>
 #include <vector>
 #include <functional>
@@ -43,7 +42,7 @@ private:
 		m_EntityFactory[type] = [this]() -> EntityBase*
 		{
 			return new T(this);
-		}
+		};
 	}
 
 	void ProcessRemovals();

@@ -11,6 +11,8 @@
 using TileMap = std::unordered_map<TileID, Tile*>;
 using TileSet = std::unordered_map<TileID, TileInfo*>;
 
+class EntityManager;
+
 
 class Map
 {
@@ -40,6 +42,8 @@ public:
 	void Update(float deltaTime);
 
 	void Draw();
+
+	EntityManager* GetEntityManager() const { return m_EntityManager; }
 
 private:
 	/*
@@ -80,4 +84,5 @@ private:
 
 	BaseState* m_CurrentState;
 	SharedContext* m_Context;
+	EntityManager* m_EntityManager;
 };
