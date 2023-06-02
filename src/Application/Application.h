@@ -3,6 +3,8 @@
 #include "Window/Window.h"
 #include <iostream>
 #include "States/StateManager.h"
+#include "Entities/EntityManager.h"
+#include "ResourceManagement/TextureManager.h"
 
 
 class Application
@@ -28,4 +30,6 @@ private:
 	sf::Clock m_clock;
 	SharedContext m_SharedContext;
 	StateManager m_StateManager;
+	EntityManager m_EntityManager;
+	TextureManager m_TextureManager;
 };

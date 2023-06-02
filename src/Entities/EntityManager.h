@@ -11,7 +11,7 @@ class SharedContext;
 
 using EntityContainer = std::unordered_map<unsigned int, EntityBase*>;
 using EntityFactory = std::unordered_map<EntityType, std::function<EntityBase* (void)>>;
-using EnemyTypes = std::unordered_map<std::string, std::string>; // (name, characterFile)
+using EnemyTypes = std::unordered_map<std::string, std::string>;
 
 class EntityManager
 {
@@ -51,8 +51,12 @@ private:
 
 	void EntityCollisionProcessing();
 
+	// (id, entity)
 	EntityContainer m_Entities;
+
+	// (name, characterFile)
 	EnemyTypes m_EnemyTypes;
+
 	EntityFactory m_EntityFactory;
 
 	SharedContext* m_Context;

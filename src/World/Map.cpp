@@ -77,7 +77,7 @@ void Map::LoadMap(const std::string& path)
 
 			Tile* tile = new Tile();
 			tile->Properties = iter->second;
-			if (m_Tiles.emplace(ConvertCoords(tileCoords.x, tileCoords.y), tile).second)
+			if (!m_Tiles.emplace(ConvertCoords(tileCoords.x, tileCoords.y), tile).second)
 			{
 				std::cerr << "Duplicate tile at: (" << tileCoords.x << ", " << tileCoords.y << ")" << std::endl;
 				delete tile;

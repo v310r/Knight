@@ -9,7 +9,7 @@
 
 Player::Player(EntityManager* entityManager) : Character(entityManager)
 {
-	Load("assets/Entities/Player.char");
+	Load("cfg/Entities/Player.char");
 	m_Type = EntityType::Player;
 
 	EventManager* eventManager = m_EntityManager->GetContext()->GetEventManager();

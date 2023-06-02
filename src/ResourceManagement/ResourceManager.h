@@ -25,14 +25,15 @@ public:
 			++res->second;
 			return true;
 		}
+		
 
-		auto path = m_Paths.find(id);
-		if (path == m_Paths.end())
+		std::string pathToResourse = GetPath(id);
+		if (pathToResourse.empty())
 		{
 			return false;
 		}
 
-		T* resource = Load(path->second);
+		T* resource = Load(pathToResourse);
 		if (!resource)
 		{
 			return false;
@@ -70,9 +71,9 @@ public:
 		}
 	}
 
-	T* Load(const std::string& path)
+	T* Load(const std::string& pathToFile)
 	{
-		return static_cast<Derived*>(this)->Load(path);
+		return static_cast<Derived*>(this)->Load(pathToFile);
 	}
 
 	T* GetResource(const std::string& id)

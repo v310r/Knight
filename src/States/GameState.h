@@ -2,12 +2,13 @@
 
 #include "BaseState.h"
 
+class Map;
 
 class GameState : public BaseState
 {
 public:
 
-	GameState(StateManager* stateManager) : BaseState(stateManager) {}
+	GameState(StateManager* stateManager);
 
 	virtual void OnCreate() override;
 	virtual void OnDestroy() override;
@@ -22,9 +23,6 @@ public:
 	void Pause(EventDetails* details);
 
 private:
-
-	sf::Texture m_texture;
-	sf::Sprite m_sprite;
-	sf::Vector2f m_increment;
+	Map* m_Map;
 };
 

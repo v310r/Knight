@@ -39,7 +39,7 @@ public:
 		return m_TextureManager;
 	}
 
-	void SetEventManager(TextureManager* textureManager)
+	void SetTextureManager(TextureManager* textureManager)
 	{
 		m_TextureManager = textureManager;
 	}

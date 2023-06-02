@@ -1,10 +1,13 @@
 #include "Application.h"
 
 
-Application::Application() : m_Window("Knight", sf::Vector2u(800, 600)), m_StateManager(&m_SharedContext)
+Application::Application() : 
+	m_Window("Knight", sf::Vector2u(800, 600)), m_StateManager(&m_SharedContext), m_EntityManager(&m_SharedContext, 10)
 {
 	m_SharedContext.SetWindow(&m_Window);
 	m_SharedContext.SetEventManager(m_Window.GetEventManager());
+	m_SharedContext.SetEntityManager(&m_EntityManager);
+	m_SharedContext.SetTextureManager(&m_TextureManager);
 	m_StateManager.SwitchTo(StateType::Intro);
 }
 

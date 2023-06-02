@@ -1,0 +1,11 @@
+Texture RatSprite
+Size 32 32
+Scale 1.0 1.0
+|Type|Name|StartFrame|EndFrame|Row|FrameTime|FrameActionStart|End|
+AnimationType Directional
+Animation Death 0 8 0 0.15 -1 -1
+Animation Idle 0 7 2 0.2 -1 -1
+Animation Walk 0 5 4 0.1 -1 -1
+Animation Attack 0 6 6 0.08 2 3
+Animation Jump 0 3 8 0.2 -1 -1
+Animation Hurt 0 2 10 0.2 -1 -1

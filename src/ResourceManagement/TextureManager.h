@@ -9,6 +9,6 @@ class TextureManager : public ResourceManager<TextureManager, sf::Texture>
 public:
 	TextureManager();
 
-	sf::Texture* Load(const std::string& path);
+	sf::Texture* Load(const std::string& pathToFile);
 };
 

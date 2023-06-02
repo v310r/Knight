@@ -1,15 +1,29 @@
 #include "GameState.h"
 
+#include <iostream>
 #include "StateManager.h"
 #include "Window/Window.h"
+#include "World/Map.h"
+#include "Entities/EntityManager.h"
+#include "Entities/EntityBase.h"
 
+
+GameState::GameState(StateManager* stateManager) : BaseState(stateManager)
+{
+
+}
 
 void GameState::OnCreate()
 {
-	m_texture.loadFromFile("assets/textures/Reaper.png");
-	m_sprite.setTexture(m_texture);
-	m_sprite.setPosition(0, 0);
-	m_increment = sf::Vector2f(400.0f, 400.0f);
+	const sf::Vector2u size = m_StateManager->GetContext()->GetWindow()->GetWindowSize();
+
+	m_View.setSize(size.x, size.y);
+	m_View.setCenter(size.x / 2.0f, size.y / 2.0f);
+	m_View.zoom(0.6f);
+	m_StateManager->GetContext()->GetWindow()->GetRenderWindow()->setView(m_View);
+
+	m_Map = new Map(m_StateManager->GetContext(), this);
+	m_Map->LoadMap("cfg/Maps/Map1.map");
 
 	EventManager* const eManager = m_StateManager->GetContext()->GetEventManager();
 	eManager->AddCallback(StateType::Game, "Key_Escape", &GameState::GoToMainMenu, this);
@@ -21,6 +35,9 @@ void GameState::OnDestroy()
 	EventManager* const eManager = m_StateManager->GetContext()->GetEventManager();
 	eManager->RemoveCallback(StateType::Game, "Key_Escape");
 	eManager->RemoveCallback(StateType::Game, "Key_P");
+
+	delete m_Map;
+	m_Map = nullptr;
 }
 
 void GameState::Activate()
@@ -33,29 +50,41 @@ void GameState::Deactivate()
 
 void GameState::Update(const sf::Time& deltaTime)
 {
-	const sf::Vector2u windowSize = m_StateManager->GetContext()->GetWindow()->GetWindowSize();
-	const sf::Vector2u textureSize = m_texture.getSize();
-	if ((m_sprite.getPosition().x > windowSize.x -
-		textureSize.x && m_increment.x > 0) ||
-		(m_sprite.getPosition().x < 0 && m_increment.x < 0))
+	SharedContext* context = m_StateManager->GetContext();
+	EntityBase* player = context->GetEntityManager()->Find("Player");
+	if (!player)
 	{
-		m_increment.x = -m_increment.x;
+		std::cout << "Respawning player..." << std::endl;
+		context->GetEntityManager()->Add(EntityType::Player, "Player");
+		player = context->GetEntityManager()->Find("Player");
+		player->SetPosition(m_Map->GetPlayerStart());
 	}
-	if ((m_sprite.getPosition().y > windowSize.y -
-		textureSize.y && m_increment.y > 0) ||
-		(m_sprite.getPosition().y < 0 && m_increment.y < 0))
+	else
 	{
-		m_increment.y = -m_increment.y;
+		m_View.setCenter(player->GetPosition());
+		context->GetWindow()->GetRenderWindow()->setView(m_View);
 	}
-	m_sprite.setPosition(m_sprite.getPosition().x +
-		(m_increment.x * deltaTime.asSeconds()),
-		m_sprite.getPosition().y +
-		(m_increment.y * deltaTime.asSeconds()));
+
+	const sf::FloatRect viewSpace = context->GetWindow()->GetViewSpace();
+	if (viewSpace.left <= 0.0f)
+	{
+		m_View.setCenter(viewSpace.width / 2.0f, m_View.getCenter().y);
+		context->GetWindow()->GetRenderWindow()->setView(m_View);
+	}
+	else if (viewSpace.left + viewSpace.width > (m_Map->GetMapSize().x + 1) * TileSheet::TileSize)
+	{
+		m_View.setCenter(((m_Map->GetMapSize().x + 1) * TileSheet::TileSize) - (viewSpace.width / 2.0f), m_View.getCenter().y);
+		context->GetWindow()->GetRenderWindow()->setView(m_View);
+	}
+
+	m_Map->Update(deltaTime.asSeconds());
+	m_StateManager->GetContext()->GetEntityManager()->Update(deltaTime.asSeconds());
 }
 
 void GameState::Draw()
 {
-	m_StateManager->GetContext()->GetWindow()->GetRenderWindow()->draw(m_sprite);
+	m_Map->Draw();
+	m_StateManager->GetContext()->GetEntityManager()->Draw();
 }
 
 void GameState::GoToMainMenu(EventDetails* details)
