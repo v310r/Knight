@@ -5,7 +5,7 @@
 #include "Utilities/CollisionHelper.h"
 #include "EntityManager.h"
 #include <algorithm>
-
+#include <iostream>
 
 EntityBase::EntityBase(EntityManager* entityManager) : m_EntityManager(entityManager)
 {
@@ -19,10 +19,12 @@ EntityBase::~EntityBase()
 
 void EntityBase::Update(float deltaTime)
 {
+
 	Map* map = m_EntityManager->GetContext()->GetMap();
 	const float gravity = map->GetGravity();
 	Accelerate(0.0f, gravity);
 	AddVelocity(m_Acceleration * deltaTime);
+	//std::cout << "Position-> (" << m_Position.x << ", " << m_Position.y << "); Velocity-> (" << m_Velocity.x << ", " << m_Velocity.y << "); -> (Acceleration " << m_Acceleration.x << ", " << m_Acceleration.y << ")\n";
 	SetAcceleration(0.0f, 0.0f);
 
 	sf::Vector2f frictionValue;
@@ -54,6 +56,9 @@ void EntityBase::Update(float deltaTime)
 	m_bCollidingOnY = false;
 
 	DetectCollisions();
+#ifdef _DEBUG
+	m_DebugCollisions = m_Collisions;
+#endif
 	ResolveCollisions();
 }
 
@@ -239,7 +244,7 @@ void EntityBase::SetState(EntityState state)
 
 void EntityBase::UpdateAABB()
 {
-	m_AABB = sf::FloatRect(m_Position.x - (m_Size.x / 2.0f), m_Position.y - m_Size.y, m_Size.x, m_Size.y);
+	m_AABB = sf::FloatRect(m_Position.x - (m_Size.x / 2.0f), m_Position.y - (m_Size.y / 2.0f), m_Size.x, m_Size.y);
 }
 
 void EntityBase::DetectCollisions()
@@ -262,14 +267,14 @@ void EntityBase::DetectCollisions()
 				continue;
 			}
 
-			const float left = x * tileSize;
-			const float top = y * tileSize;
-			const sf::FloatRect tileBounds(left, top, tileSize, tileSize);
 			sf::FloatRect intersection;
-			m_AABB.intersects(tileBounds, intersection);
+			if (!m_AABB.intersects(tile->AABB, intersection))
+			{
+				continue;
+			}
 
 			const float area = intersection.width * intersection.height;
-			m_Collisions.emplace_back(CollisionManifold(area, tile->Properties, tileBounds));
+			m_Collisions.emplace_back(CollisionManifold(area, tile->Properties, tile->AABB));
 			if (tile->bWarp && m_Type == EntityType::Player)
 			{
 				map->LoadNext();
@@ -309,8 +314,8 @@ void EntityBase::ResolveCollisions()
 			continue;
 		}
 
-		const float xDiff = (m_AABB.left + (m_AABB.width / 2.0f)) - manifold.TileBounds.left + (manifold.TileBounds.width / 2.0f);
-		const float yDiff = (m_AABB.top + (m_AABB.height / 2.0f)) - manifold.TileBounds.top + (manifold.TileBounds.height / 2.0f);
+		const float xDiff = (m_AABB.left + (m_AABB.width / 2.0f)) - (manifold.TileBounds.left + (manifold.TileBounds.width / 2.0f));
+		const float yDiff = (m_AABB.top + (m_AABB.height / 2.0f)) - (manifold.TileBounds.top + (manifold.TileBounds.height / 2.0f));
 
 		float resolve = 0;
 		if (std::abs(xDiff) > std::abs(yDiff))

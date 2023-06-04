@@ -23,7 +23,7 @@ public:
 
 	~StateManager();
 
-	void Update(const sf::Time& deltaTime);
+	void Update(const float deltaTime);
 	void Draw();
 
 	void ProcessRequests();

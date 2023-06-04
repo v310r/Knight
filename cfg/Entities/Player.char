@@ -1,7 +1,7 @@
 Name Player
 Spritesheet cfg/Sheets/Player.sheet
 Health 5
-CollisionBox 20 26
+CollisionBox 32 32
 DamageBox -5 0 26 26
 Speed 1024 128
 JumpVelocity 250

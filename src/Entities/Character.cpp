@@ -7,6 +7,9 @@
 #include "SharedContext/SharedContext.h"
 #include "Animation/AnimBase.h"
 
+#ifdef _DEBUG
+#include "Debug/RectangleDebugger.h"
+#endif
 
 constexpr float ANIMATION_THRESHOLD_BY_VELOCITY_Y = 0.001f;
 constexpr float ANIMATION_THRESHOLD_BY_VELOCITY_X = 0.1f;
@@ -71,6 +74,22 @@ void Character::Update(float deltaTime)
 void Character::Draw(sf::RenderWindow* window)
 {
 	m_SpriteSheet->Draw(*window);
+
+#ifdef _DEBUG
+	RectangleDebugger::SetFillColor(sf::Color(0, 0, 255, 128));
+	RectangleDebugger::Draw(window, m_AABB);
+	RectangleDebugger::SetFillColor(sf::Color(255, 0, 0, 128));
+	RectangleDebugger::Draw(window, m_AttackAABB);
+
+	RectangleDebugger::SetFillColor(sf::Color(255, 255, 0, 128));
+	for (CollisionManifold& manifold : m_DebugCollisions)
+	{
+		RectangleDebugger::Draw(window, manifold.TileBounds);
+	}
+
+	m_DebugCollisions.clear();
+
+#endif
 }
 
 void Character::Move(const SpriteDirection& direction)
@@ -143,7 +162,7 @@ void Character::Load(const std::string& path)
 	file.open(std::filesystem::current_path() / path);
 	if (!file.is_open())
 	{
-		std::cerr << "Failed to open file: " << path << std::endl;
+		std::cerr << "Failed to open file: " << path << ", src: " << __FILE__ << std::endl;
 	}
 
 	std::string line;
@@ -194,7 +213,7 @@ void Character::Load(const std::string& path)
 		}
 		else
 		{
-			std::cerr << "Unknown type in character file: " << type << std::endl;
+			std::cerr << "Unknown type in character file: " << type << ", src: " << __FILE__ << std::endl;
 		}
 	}
 }

@@ -6,7 +6,6 @@
 
 void IntroState::OnCreate()
 {
-	m_timePassed = 0.0f;
 	const sf::Vector2u windowSize = m_StateManager->GetContext()->GetWindow()->GetRenderWindow()->getSize();
 
 	m_introTexture.loadFromFile("assets/textures/intro.png");
@@ -42,13 +41,13 @@ void IntroState::Deactivate()
 {
 }
 
-void IntroState::Update(const sf::Time& deltaTime)
+void IntroState::Update(const float deltaTime)
 {
-	if (m_timePassed < 5.0f)
+	if (m_timePassed < m_TimeToFinishTransition)
 	{
-		m_timePassed += deltaTime.asSeconds() * 50;
+		m_timePassed += deltaTime;
 		m_introSprite.setPosition(m_introSprite.getPosition().x,
-			m_introSprite.getPosition().y + (48 * 50 * deltaTime.asSeconds()));
+			m_introSprite.getPosition().y + (m_TransitionSpeed * deltaTime));
 	}
 }
 
@@ -56,7 +55,7 @@ void IntroState::Draw()
 {
 	sf::RenderWindow* window = m_StateManager->GetContext()->GetWindow()->GetRenderWindow();
 	window->draw(m_introSprite);
-	if (m_timePassed >= 5.0f)
+	if (m_timePassed >= m_TimeToFinishTransition)
 	{
 		window->draw(m_text);
 	}
@@ -64,7 +63,7 @@ void IntroState::Draw()
 
 void IntroState::Continue(EventDetails* details)
 {
-	if (m_timePassed >= 5.0f)
+	if (m_timePassed >= m_TimeToFinishTransition)
 	{
 		m_StateManager->SwitchTo(StateType::MainMenu);
 		m_StateManager->Remove(StateType::Intro);

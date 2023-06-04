@@ -101,6 +101,9 @@ protected:
 	bool m_bCollidingOnY = false;
 
 	Collisions m_Collisions;
+#ifdef _DEBUG
+	Collisions m_DebugCollisions;
+#endif
 	EntityManager* m_EntityManager;
 
 };

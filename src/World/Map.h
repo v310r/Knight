@@ -49,7 +49,7 @@ private:
 	/*
 	*	Method for converting 2D coordinates to 1D ints.
 	*/ 
-	unsigned int ConvertCoords(unsigned int x, unsigned int y) { return (x * m_MaxSize.x) + y; }
+	unsigned int ConvertCoords(unsigned int x, unsigned int y) { return (y * m_MaxSize.x) + x; }
 
 	void LoadTiles(const std::string& path);
 
@@ -63,7 +63,7 @@ private:
 	*/
 	void PurgeTileSet();
 
-
+	
 	TileSet m_TileSet;
 	TileMap m_Tiles;
 	TileInfo m_DefaultTile;
@@ -77,7 +77,7 @@ private:
 	unsigned int m_TileCount = 0;
 	unsigned int m_TileSetCount = 0;
 
-	float m_Gravity = 512.0f;
+	float m_Gravity = 1024.0f;
 
 	std::string m_NextMap;
 	bool m_LoadNextMap = false;

@@ -48,13 +48,13 @@ void GameState::Deactivate()
 {
 }
 
-void GameState::Update(const sf::Time& deltaTime)
+void GameState::Update(const float deltaTime)
 {
 	SharedContext* context = m_StateManager->GetContext();
 	EntityBase* player = context->GetEntityManager()->Find("Player");
 	if (!player)
 	{
-		std::cout << "Respawning player..." << std::endl;
+		std::cout << "Respawning player..." << ", src: " << __FILE__ <<  std::endl;
 		context->GetEntityManager()->Add(EntityType::Player, "Player");
 		player = context->GetEntityManager()->Find("Player");
 		player->SetPosition(m_Map->GetPlayerStart());
@@ -77,8 +77,8 @@ void GameState::Update(const sf::Time& deltaTime)
 		context->GetWindow()->GetRenderWindow()->setView(m_View);
 	}
 
-	m_Map->Update(deltaTime.asSeconds());
-	m_StateManager->GetContext()->GetEntityManager()->Update(deltaTime.asSeconds());
+	m_Map->Update(deltaTime);
+	m_StateManager->GetContext()->GetEntityManager()->Update(deltaTime);
 }
 
 void GameState::Draw()

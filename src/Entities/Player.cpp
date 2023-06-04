@@ -13,8 +13,11 @@ Player::Player(EntityManager* entityManager) : Character(entityManager)
 	m_Type = EntityType::Player;
 
 	EventManager* eventManager = m_EntityManager->GetContext()->GetEventManager();
-	eventManager->AddCallback<Player>(StateType::Game, "Player_MoveLeft", &Player::MoveRight, this);
-	eventManager->AddCallback<Player>(StateType::Game, "Player_MoveRight", &Player::MoveLeft, this);
+	eventManager->AddCallback<Player>(StateType::Game, "Player_MoveLeft", &Player::MoveLeft, this);
+	eventManager->AddCallback<Player>(StateType::Game, "Player_StopLeft", &Player::StopLeft, this);
+	eventManager->AddCallback<Player>(StateType::Game, "Player_MoveRight", &Player::MoveRight, this);
+	eventManager->AddCallback<Player>(StateType::Game, "Player_StopRight", &Player::StopRight, this);
+
 	eventManager->AddCallback<Player>(StateType::Game, "Player_Jump", &Player::Jump, this);
 	eventManager->AddCallback<Player>(StateType::Game, "Player_Attack", &Player::Attack, this);
 }
@@ -26,6 +29,20 @@ Player::~Player()
 	eventManager->RemoveCallback(StateType::Game, "Player_MoveRight");
 	eventManager->RemoveCallback(StateType::Game, "Player_Jump");
 	eventManager->RemoveCallback(StateType::Game, "Player_Attack");
+}
+
+void Player::Update(float deltaTime)
+{
+	if (m_bKeyPressedLeft)
+	{
+		Move(SpriteDirection::Left);
+	}
+	else if (m_bKeyPressedRight)
+	{
+		Move(SpriteDirection::Right);
+	}
+
+	Character::Update(deltaTime);
 }
 
 void Player::OnEntityCollision(EntityBase* collidedEntity, bool bAttack)
@@ -71,20 +88,30 @@ void Player::OnEntityCollision(EntityBase* collidedEntity, bool bAttack)
 
 void Player::MoveRight(EventDetails* details)
 {
+	m_bKeyPressedRight = true;
+}
 
+void Player::StopRight(EventDetails* details)
+{
+	m_bKeyPressedRight = false;
 }
 
 void Player::MoveLeft(EventDetails* details)
 {
+	m_bKeyPressedLeft = true;
+}
 
+void Player::StopLeft(EventDetails* details)
+{
+	m_bKeyPressedLeft = false;
 }
 
 void Player::Jump(EventDetails* details)
 {
-
+	Character::Jump();
 }
 
 void Player::Attack(EventDetails* details)
 {
-
+	Character::Attack();
 }

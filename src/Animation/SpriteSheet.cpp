@@ -39,7 +39,7 @@ bool SpriteSheet::LoadSheet(const std::string& configPath)
 			{
 				if (m_TextureName != "")
 				{
-					std::cerr << "Duplicate texture entries in: " << configPath << std::endl;
+					std::cerr << "Duplicate texture entries in: " << configPath << ", src: " << __FILE__ << std::endl;
 					continue;
 				}
 
@@ -47,7 +47,7 @@ bool SpriteSheet::LoadSheet(const std::string& configPath)
 				keystream >> textureName;
 				if (!m_TextureManager->RequireResource(textureName))
 				{
-					std::cerr << "Couldn't set up the texture: " << textureName << std::endl;
+					std::cerr << "Couldn't set up the texture: " << textureName << ", src: " << __FILE__ << std::endl;
 					continue;
 				}
 
@@ -74,7 +74,7 @@ bool SpriteSheet::LoadSheet(const std::string& configPath)
 				keystream >> name;
 				if (m_Animations.find(name) != m_Animations.end())
 				{
-					std::cerr << "Duplicate animation (" << name << ") in: " << configPath << std::endl;
+					std::cerr << "Duplicate animation (" << name << ") in: " << configPath << ", src: " << __FILE__ << std::endl;
 				}
 
 				AnimBase* anim = nullptr;
@@ -84,7 +84,7 @@ bool SpriteSheet::LoadSheet(const std::string& configPath)
 				}
 				else
 				{
-					std::cerr << "Unknown animation type: " << m_AnimType << std::endl;
+					std::cerr << "Unknown animation type: " << m_AnimType << ", src: " << __FILE__ << std::endl;
 					continue;
 				}
 
@@ -106,7 +106,7 @@ bool SpriteSheet::LoadSheet(const std::string& configPath)
 		}
 		else
 		{
-			std::cerr << "No Animation settings present in config file: " << configPath << std::endl;
+			std::cerr << "No Animation settings present in config file: " << configPath << ", src: " << __FILE__ << std::endl;
 			return false;
 		}
 
@@ -115,7 +115,7 @@ bool SpriteSheet::LoadSheet(const std::string& configPath)
 		return true;
 	}
 
-	std::cerr << "Failed to load SpriteSheet: " << configPath << std::endl;
+	std::cerr << "Failed to load SpriteSheet: " << configPath << ", src: " << __FILE__ << std::endl;
 	return false;
 }
 
@@ -125,7 +125,10 @@ void SpriteSheet::ReleaseSheet()
 	m_CurrentAnimation = nullptr;
 	while (m_Animations.begin() != m_Animations.end())
 	{
-		delete m_Animations.begin()->second;
+		auto& [animationName, animationObject] = *m_Animations.begin();
+
+		delete animationObject;
+		animationObject = nullptr;
 		m_Animations.erase(m_Animations.begin());
 	}
 }
@@ -179,7 +182,9 @@ bool SpriteSheet::SetAnimation(const std::string& name, bool bPlay, bool bLoop)
 		return false;
 	}
 
-	if (iter->second == m_CurrentAnimation)
+	auto& [animationName, animationObject] = *iter;
+
+	if (animationObject == m_CurrentAnimation)
 	{
 		return false;
 	}
@@ -189,14 +194,13 @@ bool SpriteSheet::SetAnimation(const std::string& name, bool bPlay, bool bLoop)
 		m_CurrentAnimation->Stop();
 	}
 
-	m_CurrentAnimation = iter->second;
+	m_CurrentAnimation = animationObject;
 	m_CurrentAnimation->SetLooping(bLoop);
 	if (bPlay)
 	{
 		m_CurrentAnimation->Play();
 	}
+
 	m_CurrentAnimation->CropSprite();
 	return true;
-
-
 }

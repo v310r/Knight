@@ -1,4 +1,5 @@
 #include "Application.h"
+#include <iostream>
 
 
 Application::Application() : 
@@ -8,11 +9,12 @@ Application::Application() :
 	m_SharedContext.SetEventManager(m_Window.GetEventManager());
 	m_SharedContext.SetEntityManager(&m_EntityManager);
 	m_SharedContext.SetTextureManager(&m_TextureManager);
-	m_StateManager.SwitchTo(StateType::Intro);
+	m_StateManager.SwitchTo(StateType::Game);
 }
 
 Application::~Application()
 {
+
 }
 
 void Application::HandleInput()
@@ -22,9 +24,10 @@ void Application::HandleInput()
 
 void Application::Update()
 {
+	const sf::Time d = m_clock.restart();
 	m_Window.Update();
-	const sf::Time d = m_clock.getElapsedTime();
-	m_StateManager.Update(d);
+	//std::cout << "deltaTime: " << d.asSeconds() << "\n";
+	m_StateManager.Update(d.asSeconds());
 }
 
 void Application::Render()
@@ -42,5 +45,4 @@ Window& Application::GetWindow()
 void Application::PostUpdate()
 {
 	m_StateManager.ProcessRequests();
-	m_clock.restart();
 }

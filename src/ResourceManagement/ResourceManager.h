@@ -15,14 +15,18 @@ public:
 		LoadPaths(fileContainingPaths);
 	}
 
-	~ResourceManager() { PurgeResources(); }
+	~ResourceManager() 
+	{ 
+		//PurgeResources(); 
+	}
 
 	bool RequireResource(const std::string& id)
 	{
 		auto res = Find(id);
 		if (res)
 		{
-			++res->second;
+			auto& [resource, referenceCounter] = *res;
+			++referenceCounter;
 			return true;
 		}
 		
@@ -52,9 +56,12 @@ public:
 			return false;
 		}
 
+		auto& [resource, referenceCounter] = *res;
+
 		// if the resource is no longer used by anything, then unload it
-		--res->second;
-		if (res->second == 0)
+		--referenceCounter;
+
+		if (referenceCounter == 0)
 		{
 			Unload(id);
 		}
@@ -66,7 +73,11 @@ public:
 	{
 		while (m_Resources.begin() != m_Resources.end())
 		{
-			delete m_Resources.begin()->second.first;
+			auto& [resourceName, res] = *m_Resources.begin();
+			auto& [resource, referenceCounter] = res;
+
+			delete resource;
+			resource == nullptr;
 			m_Resources.erase(m_Resources.begin());
 		}
 	}
@@ -98,13 +109,19 @@ private:
 	bool Unload(const std::string& id)
 	{
 		auto iter = m_Resources.find(id);
-		if (iter != m_Resources.end())
+		if (iter == m_Resources.end())
 		{
-			delete iter->second.first;
-			m_Resources.erase(iter);
-			return true;
+			return false;
 		}
-		return false;
+
+		auto& [resourceName, res] = *iter;
+		auto& [resource, referenceCounter] = res;
+
+		delete resource;
+		resource = nullptr;
+		m_Resources.erase(iter);
+
+		return true;
 	}
 
 	void LoadPaths(const std::string& fileContainingPaths)
@@ -129,7 +146,7 @@ private:
 			return;
 		}
 		
-		std::cerr << "Failed to load the file which contains paths: " << fileContainingPaths << std::endl;
+		std::cerr << "Failed to load the file which contains paths: " << fileContainingPaths << ", src: " << __FILE__ << std::endl;
 	}
 
 	std::unordered_map<std::string, std::pair<T*, unsigned int>> m_Resources;

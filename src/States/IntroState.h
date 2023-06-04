@@ -15,7 +15,7 @@ public:
 	virtual void Activate() override;
 	virtual void Deactivate() override;
 
-	virtual void Update(const sf::Time& deltaTime) override;
+	virtual void Update(const float deltaTime) override;
 	virtual void Draw() override;
 
 	void Continue(EventDetails* details);
@@ -26,6 +26,11 @@ private:
 	sf::Sprite m_introSprite;
 	sf::Text m_text;
 	sf::Font m_font;
-	float m_timePassed;
+
+	float m_timePassed = 0.0f;
+
+	float m_TransitionSpeed = 250.0f;
+
+	float m_TimeToFinishTransition = 1.0f;
 };
 

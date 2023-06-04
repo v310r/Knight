@@ -15,7 +15,7 @@ sf::Texture* TextureManager::Load(const std::string& pathToFile)
 	{
 		delete texture;
 		texture = nullptr;
-		std::cerr << "Failed to load texture: " << absolutePath.string() << std::endl;
+		std::cerr << "Failed to load texture: " << absolutePath.string() << ", src: " << __FILE__ << std::endl;
 	}
 	return texture;
 }

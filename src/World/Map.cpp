@@ -36,7 +36,7 @@ void Map::LoadMap(const std::string& path)
 	file.open(std::filesystem::current_path() / path);
 	if (!file.is_open())
 	{
-		std::cerr << "Failed to load a map file: " << path << std::endl;
+		std::cerr << "Failed to load a map file: " << path << ", src: " << __FILE__ << std::endl;
 	}
 
 	std::string line;
@@ -56,33 +56,39 @@ void Map::LoadMap(const std::string& path)
 			keystream >> tileID;
 			if (tileID < 0)
 			{
-				std::cerr << "Bad tile id: " << tileID << std::endl;
+				std::cerr << "Bad tile id: " << tileID << ", src: " << __FILE__ << std::endl;
 				continue;
 			}
 
 			auto iter = m_TileSet.find(tileID);
 			if (iter == m_TileSet.end())
 			{
-				std::cerr << "Tile id(" << tileID << ") was not found in tileset." << std::endl;
+				std::cerr << "Tile id(" << tileID << ") was not found in tileset." << ", src: " << __FILE__ << std::endl;
 				continue;
 			}
 
+			
 			sf::Vector2u tileCoords;
 			keystream >> tileCoords.x >> tileCoords.y;
 			if (tileCoords.x > m_MaxSize.x || tileCoords.y > m_MaxSize.y)
 			{
-				std::cerr << "Tile is out of range: " << tileCoords.x << " " << tileCoords.y << std::endl;
+				std::cerr << "Tile is out of range: " << tileCoords.x << " " << tileCoords.y << ", src: " << __FILE__ << std::endl;
 				continue;
 			}
 
+			auto& [tileId, tileInfo] = *iter;
 			Tile* tile = new Tile();
-			tile->Properties = iter->second;
+			tile->Properties = tileInfo;
 			if (!m_Tiles.emplace(ConvertCoords(tileCoords.x, tileCoords.y), tile).second)
 			{
-				std::cerr << "Duplicate tile at: (" << tileCoords.x << ", " << tileCoords.y << ")" << std::endl;
+				std::cerr << "Duplicate tile at: (" << tileCoords.x << ", " << tileCoords.y << ")" << ", src: " << __FILE__ << std::endl;
 				delete tile;
+				tile == nullptr;
+
 				continue;
 			}
+
+			tile->AABB = sf::FloatRect(tileCoords.x * TileSheet::TileSize, tileCoords.y * TileSheet::TileSize, TileSheet::TileSize, TileSheet::TileSize);
 
 			std::string warp;
 			keystream >> warp;
@@ -139,14 +145,14 @@ void Map::LoadMap(const std::string& path)
 			keystream >> playerId;
 			if (playerId < 0)
 			{
-				std::cerr << "Bad player id(" << path << "): " << playerId << std::endl;
+				std::cerr << "Bad player id(" << path << "): " << playerId << ", src: " << __FILE__ << std::endl;
 				continue;
 			}
 
 			playerId = m_EntityManager->Add(EntityType::Player, "Player");
 			if (playerId < 0)
 			{
-				std::cerr << "Bad player id (EntityManager): " << playerId << std::endl;
+				std::cerr << "Bad player id (EntityManager): " << playerId << ", src: " << __FILE__ << std::endl;
 				continue;
 			}
 
@@ -161,7 +167,7 @@ void Map::LoadMap(const std::string& path)
 			keystream >> enemyId;
 			if (enemyId < 0)
 			{
-				std::cerr << "Bad enemy id(" << path << "): " << enemyId << std::endl;
+				std::cerr << "Bad enemy id(" << path << "): " << enemyId << ", src: " << __FILE__ << std::endl;
 				continue;
 			}
 
@@ -171,7 +177,7 @@ void Map::LoadMap(const std::string& path)
 			enemyId = m_EntityManager->Add(EntityType::Enemy, enemyName);
 			if (enemyId < 0)
 			{
-				std::cerr << "Bad enemy id (EntityManager): " << enemyId << std::endl;
+				std::cerr << "Bad enemy id (EntityManager): " << enemyId << ", src: " << __FILE__ << std::endl;
 				continue;
 			}
 
@@ -225,7 +231,7 @@ void Map::Draw()
 	const int beginX = static_cast<int>(std::floor(viewSpace.left / TileSheet::TileSize));
 	const int beginY = static_cast<int>(std::floor(viewSpace.top / TileSheet::TileSize));
 	const int endX   = static_cast<int>(std::ceil((viewSpace.left + viewSpace.width) / TileSheet::TileSize));
-	const int endY   = static_cast<int>(std::ceil((viewSpace.top + viewSpace.height / TileSheet::TileSize)));
+	const int endY   = static_cast<int>(std::ceil((viewSpace.top + viewSpace.height) / TileSheet::TileSize));
 
 	const sf::Vector2i tileBegin(beginX, beginY);
 	const sf::Vector2i tileEnd(endX, endY);
@@ -265,7 +271,7 @@ void Map::LoadTiles(const std::string& path)
 	file.open(std::filesystem::current_path() / path);
 	if (!file.is_open())
 	{
-		std::cerr << "Failed to load a tile set file: " << path << std::endl;
+		std::cerr << "Failed to load a tile set file: " << path << ", src: " << __FILE__ << std::endl;
 	}
 
 	std::string line;
@@ -289,8 +295,9 @@ void Map::LoadTiles(const std::string& path)
 
 		if (!m_TileSet.emplace(tileID, tileInfo).second)
 		{
-			std::cerr << "Duplicate detected! Tile type: " << tileInfo->Name << std::endl;
+			std::cerr << "Duplicate detected! Tile type: " << tileInfo->Name << ", src: " << __FILE__ << std::endl;
 			delete tileInfo;
+			tileInfo = nullptr;
 		}
 	}
 }
@@ -298,9 +305,10 @@ void Map::LoadTiles(const std::string& path)
 void Map::PurgeEverything()
 {
 	m_TileCount = 0;
-	for (auto& iter : m_Tiles)
+	for (auto& [tileId, tile] : m_Tiles)
 	{
-		delete iter.second; // deallocating memory for Tile
+		delete tile;
+		tile = nullptr;
 	}
 
 	m_Tiles.clear();
@@ -317,9 +325,10 @@ void Map::PurgeEverything()
 
 void Map::PurgeTileSet()
 {
-	for (auto& iter : m_TileSet)
+	for (auto& [tileId, tileInfo] : m_TileSet)
 	{
-		delete iter.second; // deallocating memory for TileInfo
+		delete tileInfo;
+		tileInfo = nullptr;
 	}
 
 	m_TileSet.clear();

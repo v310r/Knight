@@ -17,14 +17,15 @@ StateManager::StateManager(SharedContext* shared) : m_SharedContext(shared)
 
 StateManager::~StateManager()
 {
-	for (auto& iter : m_States)
+	for (auto& [stateType, stateObject] : m_States)
 	{
-		iter.second->OnDestroy();
-		delete iter.second;
+		stateObject->OnDestroy();
+		delete stateObject;
+		stateObject = nullptr;
 	}
 }
 
-void StateManager::Update(const sf::Time& deltaTime)
+void StateManager::Update(const float deltaTime)
 {
 	if (m_States.empty())
 		return;
@@ -160,10 +161,12 @@ void StateManager::RemoveState(const StateType type)
 {
 	for (auto i = m_States.begin(); i != m_States.end(); i++)
 	{
-		if (i->first == type)
+		auto& [stateType, stateObject] = *i;
+		if (stateType == type)
 		{
-			i->second->OnDestroy();
-			delete i->second;
+			stateObject->OnDestroy();
+			delete stateObject;
+			stateObject = nullptr;
 			m_States.erase(i);
 			return;
 		}

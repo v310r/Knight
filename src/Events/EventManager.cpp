@@ -12,17 +12,19 @@ EventManager::EventManager() : m_hasFocus(true)
 
 EventManager::~EventManager()
 {
-	for (auto& bindingObject : m_bindings)
+	for (auto& [bindingName, bindingObject] : m_bindings)
 	{
-		delete bindingObject.second;
-		bindingObject.second = nullptr;
+		delete bindingObject;
+		bindingObject = nullptr;
 	}
 }
 
 bool EventManager::AddBinding(Binding* binding)
 {
 	if (m_bindings.find(binding->GetName()) != m_bindings.end())
+	{
 		return false;
+	}
 
 	return m_bindings.emplace(binding->GetName(), binding).second;
 }
@@ -31,10 +33,16 @@ bool EventManager::RemoveBinding(const std::string& name)
 {
 	auto iter = m_bindings.find(name);
 	if (iter == m_bindings.end())
+	{
 		return false;
+	}
 
-	delete iter->second;
+	auto& [bindingName, bindingObject] = *iter;
+
+	delete bindingObject;
+	bindingObject = nullptr;
 	m_bindings.erase(iter);
+
 	return true;
 }
 
@@ -46,66 +54,79 @@ bool EventManager::RemoveCallback(const StateType state, const std::string& name
 {
 	auto i = m_callbacks.find(state);
 	if (i == m_callbacks.end())
+	{
 		return false;
+	}
 
-	auto i2 = i->second.find(name);
-	if (i2 == i->second.end())
+	auto& [stateType, callbackContainer] = *i;
+
+	auto i2 = callbackContainer.find(name);
+	if (i2 == callbackContainer.end())
+	{
 		return false;
+	}
 
-	i->second.erase(name);
+	callbackContainer.erase(name);
 	return true;
 }
 
 void EventManager::HandleEvent(const sf::Event& incomingEvent)
 {
-	for (auto& bindingObject : m_bindings)
+	for (auto& [bindingName, bindingObject] : m_bindings)
 	{
-		Binding* bind = bindingObject.second;
-		for (auto& e : bind->GetEvents())
+		Binding* bind = bindingObject;
+		for (auto& [eventType, eventInfo] : bind->GetEvents())
 		{
-			EventType incomingType = static_cast<EventType>(incomingEvent.type);
-			if (e.first != incomingType)
-				continue;
-
-			if (incomingType == EventType::KeyPressed || incomingType == EventType::KeyReleased)
+			const EventType incomingEventType = static_cast<EventType>(incomingEvent.type);
+			if (eventType != incomingEventType)
 			{
-				if (e.second.GetCode() != incomingEvent.key.code)
+				continue;
+			}
+
+			if (incomingEventType == EventType::KeyPressed || incomingEventType == EventType::KeyReleased)
+			{
+				if (eventInfo.GetCode() != incomingEvent.key.code)
+				{
 					continue;
+				}
 
 				if (bind->GetDetails().GetKeyCode() != -1)
 				{
-					bind->GetDetails().SetKeyCode(e.second.GetCode());
+					bind->GetDetails().SetKeyCode(eventInfo.GetCode());
 				}
 
 				bind->SetCount(bind->GetCount() + 1);
 				break;
 			}
-			else if (incomingType == EventType::MouseButtonPressed || incomingType == EventType::MouseButtonReleased)
+			else if (incomingEventType == EventType::MouseButtonPressed || incomingEventType == EventType::MouseButtonReleased)
 			{
-				if (e.second.GetCode() != incomingEvent.mouseButton.button)
+				if (eventInfo.GetCode() != incomingEvent.mouseButton.button)
+				{
 					continue;
+				}
 
 				bind->GetDetails().SetMousePos({ incomingEvent.mouseButton.x, incomingEvent.mouseButton.y });
 				if (bind->GetDetails().GetKeyCode() != -1)
 				{
-					bind->GetDetails().SetKeyCode(e.second.GetCode());
+					bind->GetDetails().SetKeyCode(eventInfo.GetCode());
 				}
 
 				bind->SetCount(bind->GetCount() + 1);
+
 				break;
 			}
 			else
 			{
 
-				if (incomingType == EventType::MouseWheelMoved)
+				if (incomingEventType == EventType::MouseWheelMoved)
 				{
 					bind->GetDetails().SetMouseWheelDelta(incomingEvent.mouseWheel.delta);
 				}
-				else if (incomingType == EventType::WindowResized)
+				else if (incomingEventType == EventType::WindowResized)
 				{
 					bind->GetDetails().SetSize(incomingEvent.size.width, incomingEvent.size.height);
 				}
-				else if (incomingType == EventType::TextEntered)
+				else if (incomingEventType == EventType::TextEntered)
 				{
 					bind->GetDetails().SetTextEntered(incomingEvent.text.unicode);
 				}
@@ -122,20 +143,20 @@ void EventManager::Update()
 		return;
 	}
 
-	for (auto& bindingObject : m_bindings)
+	for (auto& [bindingName, bindingObject] : m_bindings)
 	{
-		Binding* bind = bindingObject.second;
-		for (auto& e : bind->GetEvents())
+		Binding* bind = bindingObject;
+		for (auto& [eventType, eventInfo] : bind->GetEvents())
 		{
-			switch (e.first)
+			switch (eventType)
 			{
 				case EventType::Keyboard:
 				{
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(e.second.GetCode())))
+					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(eventInfo.GetCode())))
 					{
 						if (bind->GetDetails().GetKeyCode() != 1)
 						{
-							bind->GetDetails().SetKeyCode(e.second.GetCode());
+							bind->GetDetails().SetKeyCode(eventInfo.GetCode());
 						}
 						bind->SetCount(bind->GetCount() + 1);
 					}
@@ -143,11 +164,11 @@ void EventManager::Update()
 				}
 				case EventType::Mouse:
 				{
-					if (sf::Mouse::isButtonPressed(sf::Mouse::Button(e.second.GetCode())))
+					if (sf::Mouse::isButtonPressed(sf::Mouse::Button(eventInfo.GetCode())))
 					{
 						if (bind->GetDetails().GetKeyCode() != 1)
 						{
-							bind->GetDetails().SetKeyCode(e.second.GetCode());
+							bind->GetDetails().SetKeyCode(eventInfo.GetCode());
 						}
 						bind->SetCount(bind->GetCount() + 1);
 					}
@@ -196,7 +217,7 @@ void EventManager::LoadBindings()
 	bindings.open("cfg/Input/bindings.cfg");
 	if (bindings.is_open() == false)
 	{
-		std::cout << "Failed loading cfg file\n";
+		std::cerr << "Failed loading cfg file" << ", src: " << __FILE__ << std::endl;
 		return;
 	}
 	std::string line;
@@ -227,9 +248,11 @@ void EventManager::LoadBindings()
 			bind->BindEvent(type, eventInfo);
 		}
 
-		if (AddBinding(bind) == false) delete bind;
+		if (AddBinding(bind) == false)
+		{
+			delete bind;
+		}
 
 		bind = nullptr;
 	}
-	bindings.close();
 }

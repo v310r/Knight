@@ -65,7 +65,7 @@ void MainMenuState::Deactivate()
 {
 }
 
-void MainMenuState::Update(const sf::Time& deltaTime)
+void MainMenuState::Update(const float deltaTime)
 {
 }
 
