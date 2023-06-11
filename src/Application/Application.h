@@ -5,6 +5,7 @@
 #include "States/StateManager.h"
 #include "Entities/EntityManager.h"
 #include "ResourceManagement/TextureManager.h"
+#include <memory>
 
 
 class Application
@@ -26,10 +27,13 @@ public:
 
 private:
 
+	std::unique_ptr<TextureManager> m_TextureManager;
+
 	Window m_Window;
 	sf::Clock m_clock;
+
 	SharedContext m_SharedContext;
-	StateManager m_StateManager;
-	EntityManager m_EntityManager;
-	TextureManager m_TextureManager;
+
+	std::unique_ptr<EntityManager> m_EntityManager;
+	std::unique_ptr<StateManager> m_StateManager;
 };

@@ -7,6 +7,7 @@ class TextureManager;
 class Map;
 class EntityManager;
 
+#include <iostream>
 
 class SharedContext
 {

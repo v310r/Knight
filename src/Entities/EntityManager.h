@@ -4,7 +4,7 @@
 #include <vector>
 #include <functional>
 #include "Utilities/EntityHelper.h"
-
+#include <iostream>
 
 class EntityBase;
 class SharedContext;

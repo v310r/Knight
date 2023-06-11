@@ -8,7 +8,7 @@
 #include "Animation/AnimBase.h"
 
 #ifdef _DEBUG
-#include "Debug/RectangleDebugger.h"
+#include "Utilities/RectangleDebugger.h"
 #endif
 
 constexpr float ANIMATION_THRESHOLD_BY_VELOCITY_Y = 0.001f;

@@ -79,7 +79,8 @@ void Map::LoadMap(const std::string& path)
 			auto& [tileId, tileInfo] = *iter;
 			Tile* tile = new Tile();
 			tile->Properties = tileInfo;
-			if (!m_Tiles.emplace(ConvertCoords(tileCoords.x, tileCoords.y), tile).second)
+			TileID id = ConvertCoords(tileCoords.x, tileCoords.y);
+			if (!m_Tiles.emplace(id, tile).second)
 			{
 				std::cerr << "Duplicate tile at: (" << tileCoords.x << ", " << tileCoords.y << ")" << ", src: " << __FILE__ << std::endl;
 				delete tile;
@@ -230,16 +231,15 @@ void Map::Draw()
 	*/
 	const int beginX = static_cast<int>(std::floor(viewSpace.left / TileSheet::TileSize));
 	const int beginY = static_cast<int>(std::floor(viewSpace.top / TileSheet::TileSize));
-	const int endX   = static_cast<int>(std::ceil((viewSpace.left + viewSpace.width) / TileSheet::TileSize));
-	const int endY   = static_cast<int>(std::ceil((viewSpace.top + viewSpace.height) / TileSheet::TileSize));
+	const int endX   = std::min(static_cast<int>(std::ceil((viewSpace.left + viewSpace.width) / TileSheet::TileSize)), static_cast<int>(m_MaxSize.x));
+	const int endY   = std::min(static_cast<int>(std::ceil((viewSpace.top + viewSpace.height) / TileSheet::TileSize)), static_cast<int>(m_MaxSize.y));
 
 	const sf::Vector2i tileBegin(beginX, beginY);
 	const sf::Vector2i tileEnd(endX, endY);
 
-	unsigned int count = 0;
-	for (int x = tileBegin.x; x <= tileEnd.x; ++x)
+	for (int x = tileBegin.x; x < tileEnd.x; ++x)
 	{
-		for (int y = tileBegin.y; y <= tileEnd.y; ++y)
+		for (int y = tileBegin.y; y < tileEnd.y; ++y)
 		{
 			if (x < 0 || y < 0)
 			{
@@ -259,8 +259,6 @@ void Map::Draw()
 			sprite.setPosition(posX, posY);
 
 			window->draw(sprite);
-
-			++count;
 		}
 	}
 }

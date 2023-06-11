@@ -71,9 +71,9 @@ void GameState::Update(const float deltaTime)
 		m_View.setCenter(viewSpace.width / 2.0f, m_View.getCenter().y);
 		context->GetWindow()->GetRenderWindow()->setView(m_View);
 	}
-	else if (viewSpace.left + viewSpace.width > (m_Map->GetMapSize().x + 1) * TileSheet::TileSize)
+	else if (viewSpace.left + viewSpace.width > m_Map->GetMapSize().x * TileSheet::TileSize)
 	{
-		m_View.setCenter(((m_Map->GetMapSize().x + 1) * TileSheet::TileSize) - (viewSpace.width / 2.0f), m_View.getCenter().y);
+		m_View.setCenter((m_Map->GetMapSize().x * TileSheet::TileSize) - (viewSpace.width / 2.0f), m_View.getCenter().y);
 		context->GetWindow()->GetRenderWindow()->setView(m_View);
 	}
 

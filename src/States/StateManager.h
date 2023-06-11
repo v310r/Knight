@@ -7,7 +7,7 @@
 #include "BaseState.h"
 #include "StateType.h"
 #include "SharedContext/SharedContext.h"
-
+#include <iostream>
 
 using StateContainer = std::vector<std::pair<StateType, BaseState*>>;
 

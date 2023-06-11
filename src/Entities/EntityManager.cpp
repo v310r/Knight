@@ -114,8 +114,10 @@ void EntityManager::PurgeEntities()
 {
 	for (auto& [id, entity] : m_Entities)
 	{
+		int x = id;
 		delete entity;
 		entity = nullptr;
+
 	}
 
 	m_Entities.clear();

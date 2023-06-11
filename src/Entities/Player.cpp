@@ -89,6 +89,7 @@ void Player::OnEntityCollision(EntityBase* collidedEntity, bool bAttack)
 void Player::MoveRight(EventDetails* details)
 {
 	m_bKeyPressedRight = true;
+	StopLeft(nullptr);
 }
 
 void Player::StopRight(EventDetails* details)
@@ -99,6 +100,7 @@ void Player::StopRight(EventDetails* details)
 void Player::MoveLeft(EventDetails* details)
 {
 	m_bKeyPressedLeft = true;
+	StopRight(nullptr);
 }
 
 void Player::StopLeft(EventDetails* details)

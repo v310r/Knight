@@ -73,16 +73,16 @@ void EntityBase::Move(sf::Vector2f position)
 	m_Position += position;
 
 	const sf::Vector2u mapSize = m_EntityManager->GetContext()->GetMap()->GetMapSize();
-	const sf::Vector2u UnitMapSize = (mapSize + sf::Vector2u(1U, 1U)) * static_cast<unsigned int>(TileSheet::TileSize);
+	const sf::Vector2u UnitMapSize = mapSize * static_cast<unsigned int>(TileSheet::TileSize);
 
-
-	if (m_Position.x < 0.0f)
+	const sf::Vector2f bodyOffset = m_Size / 2.0f;
+	if (m_Position.x - bodyOffset.x < 0.0f)
 	{
-		m_Position.x = 0.0f;
+		m_Position.x = 0.0f + bodyOffset.x;
 	}
-	else if (m_Position.x > UnitMapSize.x)
+	else if (m_Position.x + bodyOffset.x > UnitMapSize.x)
 	{
-		m_Position.x = static_cast<float>(UnitMapSize.x);
+		m_Position.x = static_cast<float>(UnitMapSize.x) - bodyOffset.x;
 	}
 
 	if (m_Position.y < 0.0f)
