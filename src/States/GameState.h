@@ -8,7 +8,7 @@ class GameState : public BaseState
 {
 public:
 
-	GameState(StateManager* stateManager);
+	GameState(const std::shared_ptr<StateManager>& stateManager);
 
 	virtual void OnCreate() override;
 	virtual void OnDestroy() override;
@@ -23,6 +23,6 @@ public:
 	void Pause(EventDetails* details);
 
 private:
-	Map* m_Map;
+	std::shared_ptr<Map> m_Map;
 };
 

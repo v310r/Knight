@@ -4,7 +4,7 @@
 #include "Animation/SpriteSheet.h"
 
 
-Enemy::Enemy(EntityManager* entityManager) : Character(entityManager)
+Enemy::Enemy(const std::shared_ptr<EntityManager>& entityManager) : Character(entityManager)
 {
 	m_Type = EntityType::Enemy;
 }

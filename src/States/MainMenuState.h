@@ -7,7 +7,7 @@ class MainMenuState : public BaseState
 {
 public:
 
-	MainMenuState(StateManager* stateManager) : BaseState(stateManager) {}
+	MainMenuState(const std::shared_ptr<StateManager>& stateManager) : BaseState(stateManager) {}
 
 	virtual void OnCreate() override;
 	virtual void OnDestroy() override;

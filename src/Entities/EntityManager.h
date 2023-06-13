@@ -13,7 +13,7 @@ using EntityContainer = std::unordered_map<unsigned int, EntityBase*>;
 using EntityFactory = std::unordered_map<EntityType, std::function<EntityBase* (void)>>;
 using EnemyTypes = std::unordered_map<std::string, std::string>;
 
-class EntityManager
+class EntityManager : public std::enable_shared_from_this<EntityManager>
 {
 public:
 	EntityManager(SharedContext* context, unsigned int maxEntities);
@@ -41,7 +41,7 @@ private:
 	{
 		m_EntityFactory[type] = [this]() -> EntityBase*
 		{
-			return new T(this);
+			return new T(shared_from_this());
 		};
 	}
 

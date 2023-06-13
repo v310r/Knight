@@ -14,7 +14,7 @@ using TileSet = std::unordered_map<TileID, TileInfo*>;
 class EntityManager;
 
 
-class Map
+class Map : public std::enable_shared_from_this<Map>
 {
 public:
 	Map(SharedContext* context, BaseState* currentState);
@@ -43,7 +43,11 @@ public:
 
 	void Draw();
 
-	EntityManager* GetEntityManager() const { return m_EntityManager; }
+	std::shared_ptr<EntityManager>& GetEntityManager() { return m_EntityManager; }
+
+	void AssociateWithContext(SharedContext* context);
+
+	void AssociateWithCurrentContext();
 
 private:
 	/*
@@ -84,5 +88,5 @@ private:
 
 	BaseState* m_CurrentState;
 	SharedContext* m_Context;
-	EntityManager* m_EntityManager;
+	std::shared_ptr<EntityManager> m_EntityManager;
 };

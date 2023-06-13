@@ -16,7 +16,7 @@ class Character : public EntityBase
 	friend class EntityManager;
 
 public:
-	Character(EntityManager* entityManager);
+	Character(const std::shared_ptr<EntityManager>& entityManager);
 
 	virtual ~Character();
 

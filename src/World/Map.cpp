@@ -11,7 +11,6 @@
 Map::Map(SharedContext* context, BaseState* currentState) 
 	: m_Context(context), m_DefaultTile(context), m_CurrentState(currentState)
 {
-	m_Context->SetMap(this);
 	m_EntityManager = m_Context->GetEntityManager();
 	LoadTiles("cfg/Tiles.cfg");
 }
@@ -20,7 +19,7 @@ Map::~Map()
 {
 	PurgeEverything();
 	PurgeTileSet();
-	m_Context->SetMap(nullptr);
+	m_Context->SetMap(std::shared_ptr<Map>());
 }
 
 Tile* Map::GetTile(unsigned int x, unsigned int y)
@@ -84,12 +83,12 @@ void Map::LoadMap(const std::string& path)
 			{
 				std::cerr << "Duplicate tile at: (" << tileCoords.x << ", " << tileCoords.y << ")" << ", src: " << __FILE__ << std::endl;
 				delete tile;
-				tile == nullptr;
+				tile = nullptr;
 
 				continue;
 			}
 
-			tile->AABB = sf::FloatRect(tileCoords.x * TileSheet::TileSize, tileCoords.y * TileSheet::TileSize, TileSheet::TileSize, TileSheet::TileSize);
+			tile->AABB = sf::FloatRect(tileCoords.x * static_cast<float>(TileSheet::TileSize), tileCoords.y * static_cast<float>(TileSheet::TileSize), static_cast<float>(TileSheet::TileSize), static_cast<float>(TileSheet::TileSize));
 
 			std::string warp;
 			keystream >> warp;
@@ -261,6 +260,17 @@ void Map::Draw()
 			window->draw(sprite);
 		}
 	}
+}
+
+void Map::AssociateWithContext(SharedContext* context)
+{
+	m_Context = context;
+	context->SetMap(shared_from_this());
+}
+
+void Map::AssociateWithCurrentContext()
+{
+	m_Context->SetMap(shared_from_this());
 }
 
 void Map::LoadTiles(const std::string& path)

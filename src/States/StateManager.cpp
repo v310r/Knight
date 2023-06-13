@@ -6,6 +6,8 @@
 #include "PausedState.h"
 #include "Window/Window.h"
 
+void PrintMemoryUsage();
+
 
 StateManager::StateManager(SharedContext* shared) : m_SharedContext(shared)
 {
@@ -17,12 +19,7 @@ StateManager::StateManager(SharedContext* shared) : m_SharedContext(shared)
 
 StateManager::~StateManager()
 {
-	for (auto& [stateType, stateObject] : m_States)
-	{
-		stateObject->OnDestroy();
-		delete stateObject;
-		stateObject = nullptr;
-	}
+
 }
 
 void StateManager::Update(const float deltaTime)
@@ -113,15 +110,20 @@ void StateManager::SwitchTo(const StateType type)
 	m_SharedContext->GetEventManager()->SetCurrentState(type);
 	for (auto i = m_States.begin(); i != m_States.end(); i++)
 	{
-		if (i->first == type)
+		auto& [stateType, stateObject] = *i;
+		if (stateType == type)
 		{
 			m_States.back().second->Deactivate();
-			StateType tmpType = i->first;
-			BaseState* tmpState = i->second;
+
+			StateType tmpType = stateType;
+			BaseState* tmpState = stateObject;
+
 			m_States.erase(i);
 			m_States.emplace_back(tmpType, tmpState);
+
 			tmpState->Activate();
 			m_SharedContext->GetWindow()->GetRenderWindow()->setView(tmpState->GetView());
+
 			return;
 		}
 	}
@@ -143,6 +145,16 @@ void StateManager::Remove(const StateType type)
 	m_StatesToRemove.push_back(type);
 }
 
+void StateManager::PurgeStates()
+{
+	for (auto& [stateType, stateObject] : m_States)
+	{
+		stateObject->OnDestroy();
+		delete stateObject;
+		stateObject = nullptr;
+	}
+}
+
 void StateManager::CreateState(const StateType type)
 {
 	auto newState = m_StateFactory.find(type);
@@ -151,7 +163,8 @@ void StateManager::CreateState(const StateType type)
 		return;
 	}
 
-	BaseState* state = newState->second();
+	auto& [stateType, RetrieveStateObject] = *newState;
+	BaseState* state = RetrieveStateObject();
 	state->m_View = m_SharedContext->GetWindow()->GetRenderWindow()->getDefaultView();
 	m_States.emplace_back(type, state);
 	state->OnCreate();

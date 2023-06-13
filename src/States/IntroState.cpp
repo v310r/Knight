@@ -6,7 +6,7 @@
 
 void IntroState::OnCreate()
 {
-	const sf::Vector2u windowSize = m_StateManager->GetContext()->GetWindow()->GetRenderWindow()->getSize();
+	const sf::Vector2u windowSize = GetStateManager()->GetContext()->GetWindow()->GetRenderWindow()->getSize();
 
 	m_introTexture.loadFromFile("assets/textures/intro.png");
 	m_introSprite.setTexture(m_introTexture);
@@ -22,13 +22,13 @@ void IntroState::OnCreate()
 	m_text.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
 	m_text.setPosition(windowSize.x / 2.0f, windowSize.y / 2.0f);
 
-	EventManager* const eManager = m_StateManager->GetContext()->GetEventManager();
+	std::shared_ptr<EventManager> eManager = GetStateManager()->GetContext()->GetEventManager();
 	eManager->AddCallback(StateType::Intro, "IntroContinue", &IntroState::Continue, this);
 }
 
 void IntroState::OnDestroy()
 {
-	EventManager* const eManager = m_StateManager->GetContext()->GetEventManager();
+	std::shared_ptr<EventManager> eManager = GetStateManager()->GetContext()->GetEventManager();
 	eManager->RemoveCallback(StateType::Intro, "IntroContinue");
 
 }
@@ -53,7 +53,7 @@ void IntroState::Update(const float deltaTime)
 
 void IntroState::Draw()
 {
-	sf::RenderWindow* window = m_StateManager->GetContext()->GetWindow()->GetRenderWindow();
+	sf::RenderWindow* window = GetStateManager()->GetContext()->GetWindow()->GetRenderWindow();
 	window->draw(m_introSprite);
 	if (m_timePassed >= m_TimeToFinishTransition)
 	{
@@ -65,7 +65,7 @@ void IntroState::Continue(EventDetails* details)
 {
 	if (m_timePassed >= m_TimeToFinishTransition)
 	{
-		m_StateManager->SwitchTo(StateType::MainMenu);
-		m_StateManager->Remove(StateType::Intro);
+		GetStateManager()->SwitchTo(StateType::MainMenu);
+		GetStateManager()->Remove(StateType::Intro);
 	}
 }

@@ -4,6 +4,7 @@
 #include "Utilities/CollisionHelper.h"
 #include <SFML/System/Vector2.hpp>
 #include <string>
+#include <memory>
 
 
 class EntityManager;
@@ -19,7 +20,7 @@ class EntityBase
 	friend class EntityManager;
 
 public:
-	EntityBase(EntityManager* entityManager);
+	EntityBase(const std::shared_ptr<EntityManager>& entityManager);
 
 	virtual ~EntityBase();
 
@@ -66,6 +67,8 @@ public:
 
 	unsigned int GetId() const { return m_ID; }
 
+	std::shared_ptr<EntityManager>& GetEntityManager() { return m_EntityManager; }
+
 protected:
 	/*
 		bAttack - flag to determine whether collision occurred using an attack collision box
@@ -104,6 +107,6 @@ protected:
 #ifdef _DEBUG
 	Collisions m_DebugCollisions;
 #endif
-	EntityManager* m_EntityManager;
+	std::shared_ptr<EntityManager> m_EntityManager;
 
 };

@@ -7,12 +7,12 @@
 #include "Animation/AnimBase.h"
 
 
-Player::Player(EntityManager* entityManager) : Character(entityManager)
+Player::Player(const std::shared_ptr<EntityManager>& entityManager) : Character(entityManager)
 {
 	Load("cfg/Entities/Player.char");
 	m_Type = EntityType::Player;
 
-	EventManager* eventManager = m_EntityManager->GetContext()->GetEventManager();
+	std::shared_ptr<EventManager> eventManager = GetEntityManager()->GetContext()->GetEventManager();
 	eventManager->AddCallback<Player>(StateType::Game, "Player_MoveLeft", &Player::MoveLeft, this);
 	eventManager->AddCallback<Player>(StateType::Game, "Player_StopLeft", &Player::StopLeft, this);
 	eventManager->AddCallback<Player>(StateType::Game, "Player_MoveRight", &Player::MoveRight, this);
@@ -24,7 +24,7 @@ Player::Player(EntityManager* entityManager) : Character(entityManager)
 
 Player::~Player()
 {
-	EventManager* eventManager = m_EntityManager->GetContext()->GetEventManager();
+	std::shared_ptr<EventManager> eventManager = GetEntityManager()->GetContext()->GetEventManager();
 	eventManager->RemoveCallback(StateType::Game, "Player_MoveLeft");
 	eventManager->RemoveCallback(StateType::Game, "Player_MoveRight");
 	eventManager->RemoveCallback(StateType::Game, "Player_Jump");

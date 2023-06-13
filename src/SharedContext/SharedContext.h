@@ -7,69 +7,66 @@ class TextureManager;
 class Map;
 class EntityManager;
 
-#include <iostream>
+#include <memory>
 
 class SharedContext
 {
 public:
-
-	SharedContext() : m_Window(nullptr), m_EventManager(nullptr) {}
-
-	Window* GetWindow() const
+	std::shared_ptr<Window> GetWindow() const
 	{
-		return m_Window;
+		return m_Window.lock();
 	}
 
-	void SetWindow(Window* window)
+	void SetWindow(const std::weak_ptr<Window> window)
 	{
 		m_Window = window;
 	}
 
-	EventManager* GetEventManager() const
+	std::shared_ptr<EventManager> GetEventManager() const
 	{
-		return m_EventManager;
+		return m_EventManager.lock();
 	}
 
-	void SetEventManager(EventManager* eventManager)
+	void SetEventManager(const std::weak_ptr<EventManager> eventManager)
 	{
 		m_EventManager = eventManager;
 	}
 
-	TextureManager* GetTextureManager() const
+	std::shared_ptr<TextureManager> GetTextureManager() const
 	{
-		return m_TextureManager;
+		return m_TextureManager.lock();
 	}
 
-	void SetTextureManager(TextureManager* textureManager)
+	void SetTextureManager(const std::weak_ptr<TextureManager> textureManager)
 	{
 		m_TextureManager = textureManager;
 	}
 
-	Map* GetMap() const
+	std::shared_ptr<Map> GetMap() const
 	{
-		return m_Map;
+		return m_Map.lock();
 	}
 
-	void SetMap(Map* map)
+	void SetMap(const std::weak_ptr<Map> map)
 	{
 		m_Map = map;
 	}
 
-	EntityManager* GetEntityManager() const
+	std::shared_ptr<EntityManager> GetEntityManager() const
 	{
-		return m_EntityManager;
+		return m_EntityManager.lock();
 	}
 
-	void SetEntityManager(EntityManager* entityManager)
+	void SetEntityManager(const std::weak_ptr<EntityManager>& entityManager)
 	{
 		m_EntityManager = entityManager;
 	}
 
 private:
 
-	Window* m_Window = nullptr;
-	EventManager* m_EventManager = nullptr;
-	TextureManager* m_TextureManager = nullptr;
-	Map* m_Map = nullptr;
-	EntityManager* m_EntityManager = nullptr;
+	std::weak_ptr<Window> m_Window;
+	std::weak_ptr<EventManager> m_EventManager;
+	std::weak_ptr<TextureManager> m_TextureManager;
+	std::weak_ptr<Map> m_Map;
+	std::weak_ptr<EntityManager> m_EntityManager;
 };

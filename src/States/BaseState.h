@@ -8,9 +8,11 @@ class StateManager;
 
 class BaseState
 {
+	friend class StateManager;
+
 public:
 
-	BaseState(StateManager* stateManager)
+	BaseState(const std::shared_ptr<StateManager>& stateManager)
 		: m_StateManager(stateManager), m_Transparent(false), m_Transcendent(false)
 	{
 
@@ -50,20 +52,16 @@ public:
 		return m_Transcendent;
 	}
 
-	StateManager* GetStateManager()
-	{
-		return m_StateManager;
-	}
+	std::shared_ptr<StateManager> GetStateManager() { return m_StateManager.lock(); }
 
 	sf::View& GetView() { return m_View; }
 	const sf::View& GetView() const { return m_View; }
 
 protected:
+	std::weak_ptr<StateManager> m_StateManager;
 
-	friend class StateManager;
-
-	StateManager* m_StateManager;
 	bool m_Transparent;
 	bool m_Transcendent;
+
 	sf::View m_View;
 };

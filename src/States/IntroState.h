@@ -7,7 +7,7 @@ class IntroState : public BaseState
 {
 public:
 
-	IntroState(StateManager* stateManager) : BaseState(stateManager) {}
+	IntroState(const std::shared_ptr<StateManager>& stateManager) : BaseState(stateManager) {}
 
 	virtual void OnCreate() override;
 	virtual void OnDestroy() override;

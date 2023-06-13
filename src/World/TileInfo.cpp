@@ -9,7 +9,7 @@
 TileInfo::TileInfo(SharedContext* context, const std::string& textureName, TileID id) : Context(context)
 {
 	TextureName = textureName;
-	TextureManager* textureManager = Context->GetTextureManager();
+	std::shared_ptr<TextureManager> textureManager = Context->GetTextureManager();
 	if (TextureName.empty())
 	{
 		ID = id;
@@ -43,7 +43,7 @@ TileInfo::~TileInfo()
 		return;
 	}
 
-	if (TextureManager* textureManager = Context->GetTextureManager())
+	if (std::shared_ptr<TextureManager> textureManager = Context->GetTextureManager())
 	{
 		textureManager->ReleaseResource(TextureName);
 	}

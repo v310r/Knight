@@ -222,9 +222,10 @@ public:
 	template<typename T>
 	bool AddCallback(const StateType state, const std::string& name, void(T::* func)(EventDetails*), T* instance)
 	{
-		auto i = m_callbacks.emplace(state, CallbackContainer()).first;
-		const auto temp = std::bind(func, instance, std::placeholders::_1);
-		return i->second.emplace(name, temp).second;
+		auto& [callbackPair, bWasInserted] = m_callbacks.emplace(state, CallbackContainer());
+		auto& [stateType, callbackContainer] = *callbackPair;
+		const auto callbackFunction = std::bind(func, instance, std::placeholders::_1);
+		return callbackContainer.emplace(name, callbackFunction).second;
 	}
 
 	bool RemoveCallback(const StateType state, const std::string& name);

@@ -34,16 +34,16 @@ void Window::Update()
 		if (event.type == sf::Event::LostFocus)
 		{
 			m_IsFocused = false;
-			m_EventManager.SetFocus(false);
+			m_EventManager->SetFocus(false);
 		}
 		else if (event.type == sf::Event::GainedFocus)
 		{
 			m_IsFocused = true;
-			m_EventManager.SetFocus(true);
+			m_EventManager->SetFocus(true);
 		}
-		m_EventManager.HandleEvent(event);
+		m_EventManager->HandleEvent(event);
 	}
-	m_EventManager.Update();
+	m_EventManager->Update();
 }
 
 bool Window::IsDone() const
@@ -71,9 +71,9 @@ bool Window::IsFocused()
 	return false;
 }
 
-EventManager* Window::GetEventManager()
+std::shared_ptr<EventManager>& Window::GetEventManager()
 {
-	return &m_EventManager;
+	return m_EventManager;
 }
 
 void Window::ToggleFullscreen(EventDetails* details)
@@ -104,11 +104,12 @@ void Window::Setup(const std::string& title, const sf::Vector2u size)
 	m_WindowSize = size;
 	m_IsFullscreen = false;
 	m_IsDone = false;
+
 	Create();
 
 	m_IsFocused = true;
-	m_EventManager.AddCallback(StateType::Global, "FullscreenToggle", &Window::ToggleFullscreen, this);
-	m_EventManager.AddCallback(StateType::Global, "WindowClose", &Window::Close, this);
+	m_EventManager->AddCallback(StateType::Global, "FullscreenToggle", &Window::ToggleFullscreen, this);
+	m_EventManager->AddCallback(StateType::Global, "WindowClose", &Window::Close, this);
 }
 
 void Window::Destroy()

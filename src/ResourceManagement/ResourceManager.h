@@ -17,7 +17,7 @@ public:
 
 	~ResourceManager() 
 	{ 
-		//PurgeResources(); 
+
 	}
 
 	bool RequireResource(const std::string& id)
@@ -77,7 +77,7 @@ public:
 			auto& [resource, referenceCounter] = res;
 
 			delete resource;
-			resource == nullptr;
+			resource = nullptr;
 			m_Resources.erase(m_Resources.begin());
 		}
 	}

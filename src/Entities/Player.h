@@ -10,7 +10,7 @@ struct EventDetails;
 class Player : public Character
 {
 public:
-	Player(EntityManager* entityManager);
+	Player(const std::shared_ptr<EntityManager>& entityManager);
 
 	~Player();
 

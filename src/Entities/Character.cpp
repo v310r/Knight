@@ -15,10 +15,10 @@ constexpr float ANIMATION_THRESHOLD_BY_VELOCITY_Y = 0.001f;
 constexpr float ANIMATION_THRESHOLD_BY_VELOCITY_X = 0.1f;
 
 
-Character::Character(EntityManager* entityManager)
+Character::Character(const std::shared_ptr<EntityManager>& entityManager)
 	: EntityBase(entityManager)
 {
-	m_SpriteSheet = std::make_unique<SpriteSheet>(m_EntityManager->GetContext()->GetTextureManager());
+	m_SpriteSheet = std::make_unique<SpriteSheet>(GetEntityManager()->GetContext()->GetTextureManager());
 	m_Name = "Character";
 }
 
@@ -62,7 +62,7 @@ void Character::Update(float deltaTime)
 	{
 		if (!m_SpriteSheet->GetCurrentAnimation()->IsPlaying())
 		{
-			m_EntityManager->Remove(GetId());
+			GetEntityManager()->Remove(GetId());
 		}
 	}
 

@@ -9,7 +9,7 @@ class EntityManager;
 class Enemy : public Character
 {
 public:
-	Enemy(EntityManager* entityManager);
+	Enemy(const std::shared_ptr<EntityManager>& entityManager);
 
 	~Enemy();
 

@@ -15,7 +15,7 @@ using TypeContainer = std::vector<StateType>;
 
 using StateFactory = std::unordered_map<StateType, std::function<BaseState* (void)>>;
 
-class StateManager
+class StateManager : public std::enable_shared_from_this<StateManager>
 {
 public:
 
@@ -34,6 +34,8 @@ public:
 	void SwitchTo(const StateType type);
 	void Remove(const StateType type);
 
+	void PurgeStates();
+
 private:
 
 	void CreateState(const StateType type);
@@ -44,7 +46,7 @@ private:
 	{
 		m_StateFactory[type] = [this]() -> BaseState*
 		{
-			return new T(this);
+			return new T(shared_from_this());
 		};
 	}
 

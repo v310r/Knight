@@ -1,7 +1,7 @@
 #include "SpriteSheet.h"
 #include "AnimDirectional.h"
 
-SpriteSheet::SpriteSheet(TextureManager* const textureManager)
+SpriteSheet::SpriteSheet(const std::shared_ptr<TextureManager>& textureManager)
 	: m_TextureManager(textureManager)
 {
 

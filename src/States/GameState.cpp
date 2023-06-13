@@ -7,37 +7,38 @@
 #include "Entities/EntityManager.h"
 #include "Entities/EntityBase.h"
 
+void PrintMemoryUsage();
 
-GameState::GameState(StateManager* stateManager) : BaseState(stateManager)
+GameState::GameState(const std::shared_ptr<StateManager>& stateManager) : BaseState(stateManager)
 {
 
 }
 
 void GameState::OnCreate()
 {
-	const sf::Vector2u size = m_StateManager->GetContext()->GetWindow()->GetWindowSize();
+	const sf::Vector2u size = GetStateManager()->GetContext()->GetWindow()->GetWindowSize();
 
-	m_View.setSize(size.x, size.y);
+	m_View.setSize(static_cast<float>(size.x), static_cast<float>(size.y));
 	m_View.setCenter(size.x / 2.0f, size.y / 2.0f);
 	m_View.zoom(0.6f);
-	m_StateManager->GetContext()->GetWindow()->GetRenderWindow()->setView(m_View);
+	GetStateManager()->GetContext()->GetWindow()->GetRenderWindow()->setView(m_View);
 
-	m_Map = new Map(m_StateManager->GetContext(), this);
+	m_Map = std::make_shared<Map>(GetStateManager()->GetContext(), this);
+	m_Map->AssociateWithCurrentContext();
 	m_Map->LoadMap("cfg/Maps/Map1.map");
 
-	EventManager* const eManager = m_StateManager->GetContext()->GetEventManager();
+	std::shared_ptr<EventManager> eManager = GetStateManager()->GetContext()->GetEventManager();
 	eManager->AddCallback(StateType::Game, "Key_Escape", &GameState::GoToMainMenu, this);
 	eManager->AddCallback(StateType::Game, "Key_P", &GameState::Pause, this);
 }
 
 void GameState::OnDestroy()
 {
-	EventManager* const eManager = m_StateManager->GetContext()->GetEventManager();
+	std::shared_ptr<EventManager> eManager = GetStateManager()->GetContext()->GetEventManager();
 	eManager->RemoveCallback(StateType::Game, "Key_Escape");
 	eManager->RemoveCallback(StateType::Game, "Key_P");
 
-	delete m_Map;
-	m_Map = nullptr;
+	m_Map.reset();
 }
 
 void GameState::Activate()
@@ -50,7 +51,7 @@ void GameState::Deactivate()
 
 void GameState::Update(const float deltaTime)
 {
-	SharedContext* context = m_StateManager->GetContext();
+	SharedContext* context = GetStateManager()->GetContext();
 	EntityBase* player = context->GetEntityManager()->Find("Player");
 	if (!player)
 	{
@@ -78,21 +79,21 @@ void GameState::Update(const float deltaTime)
 	}
 
 	m_Map->Update(deltaTime);
-	m_StateManager->GetContext()->GetEntityManager()->Update(deltaTime);
+	GetStateManager()->GetContext()->GetEntityManager()->Update(deltaTime);
 }
 
 void GameState::Draw()
 {
 	m_Map->Draw();
-	m_StateManager->GetContext()->GetEntityManager()->Draw();
+	GetStateManager()->GetContext()->GetEntityManager()->Draw();
 }
 
 void GameState::GoToMainMenu(EventDetails* details)
 {
-	m_StateManager->SwitchTo(StateType::MainMenu);
+	GetStateManager()->SwitchTo(StateType::MainMenu);
 }
 
 void GameState::Pause(EventDetails* details)
 {
-	m_StateManager->SwitchTo(StateType::Paused);
+	GetStateManager()->SwitchTo(StateType::Paused);
 }

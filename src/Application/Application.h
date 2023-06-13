@@ -21,19 +21,19 @@ public:
 
 	void Render();
 
-	Window& GetWindow();
+	std::shared_ptr<Window>& GetWindow();
 
 	void PostUpdate();
 
 private:
 
-	std::unique_ptr<TextureManager> m_TextureManager;
 
-	Window m_Window;
 	sf::Clock m_clock;
 
 	SharedContext m_SharedContext;
 
-	std::unique_ptr<EntityManager> m_EntityManager;
-	std::unique_ptr<StateManager> m_StateManager;
+	std::shared_ptr<TextureManager> m_TextureManager;
+	std::shared_ptr<Window> m_Window;
+	std::shared_ptr<EntityManager> m_EntityManager;
+	std::shared_ptr<StateManager> m_StateManager;
 };

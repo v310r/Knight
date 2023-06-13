@@ -14,8 +14,7 @@ void PausedState::OnCreate()
 	m_text.setCharacterSize(14);
 	m_text.setStyle(sf::Text::Bold);
 
-	const sf::Vector2u windowSize = m_StateManager->
-		GetContext()->GetWindow()->GetRenderWindow()->getSize();
+	const sf::Vector2u windowSize = GetStateManager()->GetContext()->GetWindow()->GetRenderWindow()->getSize();
 	const sf::FloatRect textRect = m_text.getLocalBounds();
 	m_text.setOrigin(textRect.left + textRect.width / 2.0f,
 		textRect.top + textRect.height / 2.0f);
@@ -24,13 +23,13 @@ void PausedState::OnCreate()
 	m_rect.setPosition(0, 0);
 	m_rect.setFillColor(sf::Color(0, 0, 0, 150));
 
-	EventManager* const eManager = m_StateManager->GetContext()->GetEventManager();
+	std::shared_ptr<EventManager> eManager = GetStateManager()->GetContext()->GetEventManager();
 	eManager->AddCallback(StateType::Paused, "Key_P",&PausedState::Unpause, this);
 }
 
 void PausedState::OnDestroy()
 {
-	EventManager* const eManager = m_StateManager->GetContext()->GetEventManager();
+	std::shared_ptr<EventManager> eManager = GetStateManager()->GetContext()->GetEventManager();
 	eManager->RemoveCallback(StateType::Paused, "Key_P");
 }
 
@@ -48,12 +47,12 @@ void PausedState::Update(const float deltaTime)
 
 void PausedState::Draw()
 {
-	sf::RenderWindow* window = m_StateManager->GetContext()->GetWindow()->GetRenderWindow();
+	sf::RenderWindow* window = GetStateManager()->GetContext()->GetWindow()->GetRenderWindow();
 	window->draw(m_rect);
 	window->draw(m_text);
 }
 
 void PausedState::Unpause(EventDetails* details)
 {
-	m_StateManager->SwitchTo(StateType::Game);
+	GetStateManager()->SwitchTo(StateType::Game);
 }

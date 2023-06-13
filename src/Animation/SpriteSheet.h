@@ -13,7 +13,7 @@ using Animations = std::unordered_map<std::string, AnimBase*>;
 class SpriteSheet
 {
 public:
-	SpriteSheet(TextureManager* const textureManager);
+	SpriteSheet(const std::shared_ptr<TextureManager>& textureManager);
 	~SpriteSheet();
 
 	void CropSprite(const sf::IntRect& rect);
@@ -51,5 +51,5 @@ private:
 	// hardcoded value, which of course would be better to fix, making user to choose default anim through UI
 	std::string m_DefaultAnimationName = "Idle";
 
-	TextureManager* m_TextureManager;
+	std::shared_ptr<TextureManager> m_TextureManager;
 };

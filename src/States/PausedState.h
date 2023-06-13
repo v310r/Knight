@@ -7,7 +7,7 @@ class PausedState : public BaseState
 {
 public:
 
-	PausedState(StateManager* stateManager) : BaseState(stateManager) {}
+	PausedState(const std::shared_ptr<StateManager>& stateManager) : BaseState(stateManager) {}
 
 	virtual void OnCreate() override;
 	virtual void OnDestroy() override;

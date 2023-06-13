@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <iostream>
 
-EntityBase::EntityBase(EntityManager* entityManager) : m_EntityManager(entityManager)
+EntityBase::EntityBase(const std::shared_ptr<EntityManager>& entityManager) : m_EntityManager(entityManager)
 {
 
 }
@@ -20,7 +20,7 @@ EntityBase::~EntityBase()
 void EntityBase::Update(float deltaTime)
 {
 
-	Map* map = m_EntityManager->GetContext()->GetMap();
+	const std::shared_ptr<Map> map = GetEntityManager()->GetContext()->GetMap();
 	const float gravity = map->GetGravity();
 	Accelerate(0.0f, gravity);
 	AddVelocity(m_Acceleration * deltaTime);
@@ -72,7 +72,7 @@ void EntityBase::Move(sf::Vector2f position)
 	m_PositionOld = m_Position;
 	m_Position += position;
 
-	const sf::Vector2u mapSize = m_EntityManager->GetContext()->GetMap()->GetMapSize();
+	const sf::Vector2u mapSize = GetEntityManager()->GetContext()->GetMap()->GetMapSize();
 	const sf::Vector2u UnitMapSize = mapSize * static_cast<unsigned int>(TileSheet::TileSize);
 
 	const sf::Vector2f bodyOffset = m_Size / 2.0f;
@@ -249,7 +249,7 @@ void EntityBase::UpdateAABB()
 
 void EntityBase::DetectCollisions()
 {
-	Map* map = m_EntityManager->GetContext()->GetMap();
+	const std::shared_ptr<Map> map = GetEntityManager()->GetContext()->GetMap();
 	const float tileSize = static_cast<float>(map->GetTileSize());
 	
 	const int startX = static_cast<int>(std::floor(m_AABB.left / tileSize));
@@ -303,7 +303,7 @@ void EntityBase::ResolveCollisions()
 		return c1.Area > c2.Area;
 	});
 
-	Map* map = m_EntityManager->GetContext()->GetMap();
+	const std::shared_ptr<Map> map = GetEntityManager()->GetContext()->GetMap();
 	unsigned int tileSize = map->GetTileSize();
 	for (auto& manifold : m_Collisions)
 	{

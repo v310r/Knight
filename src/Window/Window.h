@@ -39,7 +39,7 @@ public:
 
 	bool IsFocused();
 
-	EventManager* GetEventManager();
+	std::shared_ptr<EventManager>& GetEventManager();
 
 	void ToggleFullscreen(EventDetails* details);
 
@@ -59,8 +59,11 @@ private:
 	sf::RenderWindow m_Window;
 	sf::Vector2u m_WindowSize;
 	std::string m_WindowTitle;
+
 	bool m_IsDone;
 	bool m_IsFullscreen;
-	EventManager m_EventManager;
 	bool m_IsFocused;
+
+	std::shared_ptr<EventManager> m_EventManager = std::make_shared<EventManager>();
+
 };
