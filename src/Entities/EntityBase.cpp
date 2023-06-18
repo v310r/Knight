@@ -24,7 +24,6 @@ void EntityBase::Update(float deltaTime)
 	const float gravity = map->GetGravity();
 	Accelerate(0.0f, gravity);
 	AddVelocity(m_Acceleration * deltaTime);
-	//std::cout << "Position-> (" << m_Position.x << ", " << m_Position.y << "); Velocity-> (" << m_Velocity.x << ", " << m_Velocity.y << "); -> (Acceleration " << m_Acceleration.x << ", " << m_Acceleration.y << ")\n";
 	SetAcceleration(0.0f, 0.0f);
 
 	sf::Vector2f frictionValue;
@@ -35,13 +34,13 @@ void EntityBase::Update(float deltaTime)
 		{
 			SetState(EntityState::Dying);
 		}
+		else if (frictionValue.x != -1.0f && frictionValue.y != -1.0f)
+		{
+			frictionValue = frictionValue;
+		}
 		else if (const TileInfo* const DefaultTile = map->GetDefaultTile())
 		{
 			frictionValue = DefaultTile->Friction;
-		}
-		else
-		{
-			frictionValue = m_Friction;
 		}
 	}
 

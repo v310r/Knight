@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include "Animation/SpriteSheet.h"
+#include "Animation/AnimBase.h"
 
 
 Enemy::Enemy(const std::shared_ptr<EntityManager>& entityManager) : Character(entityManager)
@@ -16,17 +17,12 @@ Enemy::~Enemy()
 
 void Enemy::OnEntityCollision(EntityBase* collidedEntity, bool bAttack)
 {
-	if (m_State == EntityState::Dying)
+	if (m_State == EntityState::Dying || !bAttack || collidedEntity->GetType() != EntityType::Player)
 	{
 		return;
 	}
 
-	if (bAttack)
-	{
-		return;
-	}
-
-	if (collidedEntity->GetType() != EntityType::Player)
+	if (!m_SpriteSheet->GetCurrentAnimation()->IsInAction())
 	{
 		return;
 	}

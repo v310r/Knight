@@ -14,8 +14,8 @@ Player::Player(const std::shared_ptr<EntityManager>& entityManager) : Character(
 
 	std::shared_ptr<EventManager> eventManager = GetEntityManager()->GetContext()->GetEventManager();
 	eventManager->AddCallback<Player>(StateType::Game, "Player_MoveLeft", &Player::MoveLeft, this);
-	eventManager->AddCallback<Player>(StateType::Game, "Player_StopLeft", &Player::StopLeft, this);
 	eventManager->AddCallback<Player>(StateType::Game, "Player_MoveRight", &Player::MoveRight, this);
+	eventManager->AddCallback<Player>(StateType::Game, "Player_StopLeft", &Player::StopLeft, this);
 	eventManager->AddCallback<Player>(StateType::Game, "Player_StopRight", &Player::StopRight, this);
 
 	eventManager->AddCallback<Player>(StateType::Game, "Player_Jump", &Player::Jump, this);
@@ -27,6 +27,9 @@ Player::~Player()
 	std::shared_ptr<EventManager> eventManager = GetEntityManager()->GetContext()->GetEventManager();
 	eventManager->RemoveCallback(StateType::Game, "Player_MoveLeft");
 	eventManager->RemoveCallback(StateType::Game, "Player_MoveRight");
+	eventManager->RemoveCallback(StateType::Game, "Player_StopLeft");
+	eventManager->RemoveCallback(StateType::Game, "Player_StopRight");
+
 	eventManager->RemoveCallback(StateType::Game, "Player_Jump");
 	eventManager->RemoveCallback(StateType::Game, "Player_Attack");
 }

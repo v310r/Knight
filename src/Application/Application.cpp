@@ -6,17 +6,13 @@
 constexpr float FIXED_DELTA_TIME = 0.0005f;
 #endif
 
-void PrintMemoryUsage();
 
 Application::Application()
 {
-	PROFILE_MEMORY_USAGE(m_Window = std::make_shared<Window>("Knight", sf::Vector2u(800, 600));)
-	PROFILE_MEMORY_USAGE(m_StateManager = std::make_shared<StateManager>(&m_SharedContext);)
-	// 49423
-	PROFILE_MEMORY_USAGE(m_EntityManager = std::make_shared<EntityManager>(&m_SharedContext, 10);)
-	// 50543
-	PROFILE_MEMORY_USAGE(m_TextureManager = std::make_shared<TextureManager>();)
-	// 52455
+	m_Window = std::make_shared<Window>("Knight", sf::Vector2u(800, 600));
+	m_StateManager = std::make_shared<StateManager>(&m_SharedContext);
+	m_EntityManager = std::make_shared<EntityManager>(&m_SharedContext, 10);
+	m_TextureManager = std::make_shared<TextureManager>();
 
 
 	m_SharedContext.SetWindow(m_Window);
@@ -24,12 +20,13 @@ Application::Application()
 	m_SharedContext.SetEntityManager(m_EntityManager);
 	m_SharedContext.SetTextureManager(m_TextureManager);
 	m_StateManager->SwitchTo(StateType::Game);
-	// 85958
 }
 
 Application::~Application()
 {
 	m_StateManager->PurgeStates();
+	m_EntityManager.reset();
+	m_Window.reset();
 	m_TextureManager->PurgeResources();
 }
 
@@ -46,11 +43,10 @@ void Application::Update()
 
 	m_Window->Update();
 
-#ifndef _DEBUG
-	//std::cout << "deltaTime: " << d.asSeconds() << "\n";
-	const float deltaTime = d.asSeconds();
-#else
+#ifdef _DEBUG
 	const float deltaTime = FIXED_DELTA_TIME;
+#else
+	const float deltaTime = d.asSeconds();
 #endif
 
 	m_StateManager->Update(deltaTime);

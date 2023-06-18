@@ -6,8 +6,8 @@
 #include "World/Map.h"
 #include "Entities/EntityManager.h"
 #include "Entities/EntityBase.h"
+#include "Utilities/Profiling.h"
 
-void PrintMemoryUsage();
 
 GameState::GameState(const std::shared_ptr<StateManager>& stateManager) : BaseState(stateManager)
 {

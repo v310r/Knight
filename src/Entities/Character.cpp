@@ -9,10 +9,16 @@
 
 #ifdef _DEBUG
 #include "Utilities/RectangleDebugger.h"
-#endif
 
-constexpr float ANIMATION_THRESHOLD_BY_VELOCITY_Y = 0.001f;
+
+
 constexpr float ANIMATION_THRESHOLD_BY_VELOCITY_X = 0.1f;
+constexpr float ANIMATION_THRESHOLD_BY_VELOCITY_Y = 0.1f;
+
+#else
+constexpr float ANIMATION_THRESHOLD_BY_VELOCITY_X = 1.0f;
+constexpr float ANIMATION_THRESHOLD_BY_VELOCITY_Y = 1.0f;
+#endif
 
 
 Character::Character(const std::shared_ptr<EntityManager>& entityManager)
@@ -42,11 +48,11 @@ void Character::Update(float deltaTime)
 		{
 			SetState(EntityState::Jumping);
 		}
-		else if (std::abs(m_Velocity.x) >= ANIMATION_THRESHOLD_BY_VELOCITY_X)
+		else if (std::abs(m_Velocity.x) >= ANIMATION_THRESHOLD_BY_VELOCITY_X && m_bCollidingOnY)
 		{
 			SetState(EntityState::Walking);
 		}
-		else
+		else if (m_bCollidingOnY)
 		{
 			SetState(EntityState::Idle);
 		}

@@ -8,14 +8,13 @@
 
 int main()
 {
-    PROFILE_MEMORY_USAGE(Application* game = new Application();)
+    Application* game = new Application();
 
     while (!game->GetWindow()->IsDone())
     {
         game->Update();
         game->Render();
         game->PostUpdate();
-        //PrintMemoryUsage();
     }
 
     delete game;

@@ -3,6 +3,6 @@ Spritesheet cfg/Sheets/Player.sheet
 Health 5
 CollisionBox 32 32
 DamageBox -5 0 26 26
-Speed 1024 150
+Speed 512 150
 JumpVelocity 300
-MaxVelocity 200 1024
+MaxVelocity 150 1024

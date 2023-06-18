@@ -5,6 +5,7 @@
 #include "States/StateManager.h"
 #include "Entities/EntityManager.h"
 #include "Entities/EntityBase.h"
+#include "Utilities/Profiling.h"
 #include <cmath>
 
 
@@ -19,7 +20,6 @@ Map::~Map()
 {
 	PurgeEverything();
 	PurgeTileSet();
-	m_Context->SetMap(std::shared_ptr<Map>());
 }
 
 Tile* Map::GetTile(unsigned int x, unsigned int y)
@@ -209,7 +209,6 @@ void Map::Update(float deltaTime)
 			m_CurrentState->GetStateManager()->SwitchTo(StateType::GameOver);
 		}
 
-		m_NextMap.clear();
 	}
 
 	const sf::FloatRect viewSpace = m_Context->GetWindow()->GetViewSpace();

@@ -15,9 +15,9 @@
 EntityManager::EntityManager(SharedContext* context, unsigned int maxEntities)
 	: m_Context(context), m_MaxEntities(maxEntities)
 {
-	//LoadEnemyTypes("cfg/Entities/EnemyList.list");
+	LoadEnemyTypes("cfg/Entities/EnemyList.list");
 	RegisterEntity<Player>(EntityType::Player);
-	//RegisterEntity<Enemy>(EntityType::Enemy);
+	RegisterEntity<Enemy>(EntityType::Enemy);
 }
 
 EntityManager::~EntityManager()

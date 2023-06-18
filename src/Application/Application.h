@@ -34,6 +34,6 @@ private:
 
 	std::shared_ptr<TextureManager> m_TextureManager;
 	std::shared_ptr<Window> m_Window;
-	std::shared_ptr<EntityManager> m_EntityManager;
 	std::shared_ptr<StateManager> m_StateManager;
+	std::shared_ptr<EntityManager> m_EntityManager;
 };
