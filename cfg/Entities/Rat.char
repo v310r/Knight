@@ -1,0 +1,8 @@
+Name Rat
+Spritesheet cfg/Sheets/Rat.sheet
+Health 3
+CollisionBox 20 26
+DamageBox -5 0 13 13
+Speed 16 64
+JumpVelocity 250
+MaxVelocity 100 1024
