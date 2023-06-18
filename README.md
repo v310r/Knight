@@ -9,3 +9,8 @@ To build the project, you should firstly build SFML library. Run cmake in the bu
 Then, go to the root folder and run GenerateProject.bat. Open a solution, choose whatever configuration you'd prefer (Debug or Release) and build the whole solution.
 
 Now you you should be able to play the game, enjoy :-).
+
+
+Platform-based-version:
+![image](https://github.com/v310r/Knight/assets/80487632/d0d9e186-690f-4490-b252-f0afb07fd8f6)
+
